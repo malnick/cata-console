@@ -15,7 +15,7 @@ import (
 type HttpPost struct {
 	Host string
 	Data map[string]interface{}
-	Time time.Time
+	Time string
 }
 
 func dumpToElastic(data []*HttpPost) {
@@ -28,17 +28,23 @@ func dumpToElastic(data []*HttpPost) {
 
 	// Create a new index for the host
 	for _, host := range data {
-		index := strings.ToLower(host.Host)
-		_, err = client.CreateIndex(strings.ToLower(index)).Do()
-		if err != nil {
-			log.Warn("Index alredy created: ", index)
+		host.Time = string(time.Now().Format("20060102150405"))
+		index := strings.Join([]string{strings.ToLower(host.Host), "-", host.Time}, "")
+		//index := strings.ToLower(host.Host)
+		b, err := client.IndexExists(index).Do()
+		if b == false {
+			log.Debug("Creating ES Index ", index, b)
+			_, err = client.CreateIndex(strings.ToLower(index)).Do()
+			if err != nil {
+				log.Warn("Index already created: ", index)
+			}
 		}
 		_, err = client.Index().
 			Index(index).
 			BodyJson(host).
 			Do()
 		if err != nil {
-			log.Warn("Problem dumping data: ", err)
+			log.Error("Problem dumping to ES: ", err)
 		}
 	}
 }
@@ -63,13 +69,14 @@ func Agent(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal(body, &newData.Data)
 		// Type assert our way to the hostname
 		newData.Host = newData.Data["host"].(map[string]interface{})["hostname"].(string)
-		newData.Time = time.Now()
+		//newData.Time = string(time.Now().Format("2006010215040500"))
 		respCh <- &newData
 	}(r)
 
 	// Check the channel for a resp
 	select {
 	case r := <-respCh:
+		//	log.Debug("New data from ", r.Host, "@", r.Time)
 		log.Debug("New data from ", r.Host)
 		log.Debug(r.Data)
 		hostDataArry = append(hostDataArry, r)
