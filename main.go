@@ -13,7 +13,7 @@ func main() {
 	// Parse flags
 	flag.Parse()
 	// Parse the config here before doing anything else
-	config := ParseConfig()
+	_ = ParseConfig()
 	// Run the router
 	router := NewRouter()
 	// Handle a failure

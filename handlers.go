@@ -28,11 +28,10 @@ func dumpToElastic(data []byte) {
 	_, err = client.CreateIndex("twitter").Do()
 	if err != nil {
 	}
-
 }
 
 // The container index
-func agent(w http.ResponseWriter, r *http.Request) {
+func Agent(w http.ResponseWriter, r *http.Request) {
 	log.Debug("/agent POST")
 	// Make a channel to dump our requests asynchronously
 	respCh := make(chan *HttpPost)
@@ -44,6 +43,9 @@ func agent(w http.ResponseWriter, r *http.Request) {
 	go func(r *http.Request) {
 		var newData HttpPost
 		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Error(err)
+		}
 		// Unmarshal the POST into .Data
 		err = json.Unmarshal(body, &newData.Data)
 		// Type assert our way to the hostname
@@ -51,15 +53,14 @@ func agent(w http.ResponseWriter, r *http.Request) {
 		respCh <- &newData
 	}(r)
 
-	for count := 0; count != 10; count++ {
-		select {
-		case r := <-respCh:
-			log.Debug("POST Received: ", r.Data)
-			hostDataArry = append(hostDataArry, r)
-		// Should count to 10
-		case <-time.After(time.Second * 1):
-			fmt.Printf(".")
-		}
+	// Check the channel for a resp
+	select {
+	case r := <-respCh:
+		log.Debug("New data from ", r.Host)
+		log.Debug(r.Data)
+		hostDataArry = append(hostDataArry, r)
+	case <-time.After(time.Second * 1):
+		fmt.Printf(".")
 	}
 
 	log.Debug("New Data:")
@@ -67,6 +68,6 @@ func agent(w http.ResponseWriter, r *http.Request) {
 }
 
 // The host index
-func console(w http.ResponseWriter, r *http.Request) {
+func Console(w http.ResponseWriter, r *http.Request) {
 	log.Debug("/ GET")
 }
