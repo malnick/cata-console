@@ -2,21 +2,23 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	//"fmt"
 	log "github.com/Sirupsen/logrus"
 	"gopkg.in/olivere/elastic.v2"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
 type HttpPost struct {
 	Host string
 	Data map[string]interface{}
+	Time time.Time
 }
 
-func dumpToElastic(data []byte) {
+func dumpToElastic(data []*HttpPost) {
 	// Create new elastic client
 	client, err := elastic.NewClient()
 	if err != nil {
@@ -25,8 +27,19 @@ func dumpToElastic(data []byte) {
 	}
 
 	// Create a new index for the host
-	_, err = client.CreateIndex("twitter").Do()
-	if err != nil {
+	for _, host := range data {
+		index := strings.ToLower(host.Host)
+		_, err = client.CreateIndex(strings.ToLower(index)).Do()
+		if err != nil {
+			log.Warn("Index alredy created: ", index)
+		}
+		_, err = client.Index().
+			Index(index).
+			BodyJson(host).
+			Do()
+		if err != nil {
+			log.Warn("Problem dumping data: ", err)
+		}
 	}
 }
 
@@ -50,6 +63,7 @@ func Agent(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal(body, &newData.Data)
 		// Type assert our way to the hostname
 		newData.Host = newData.Data["host"].(map[string]interface{})["hostname"].(string)
+		newData.Time = time.Now()
 		respCh <- &newData
 	}(r)
 
@@ -59,12 +73,9 @@ func Agent(w http.ResponseWriter, r *http.Request) {
 		log.Debug("New data from ", r.Host)
 		log.Debug(r.Data)
 		hostDataArry = append(hostDataArry, r)
-	case <-time.After(time.Second * 1):
-		fmt.Printf(".")
+		dumpToElastic(hostDataArry)
 	}
 
-	log.Debug("New Data:")
-	fmt.Println(hostDataArry)
 }
 
 // The host index
