@@ -38,7 +38,7 @@ func dumpToElastic(data []*HttpPost) {
 		// Dump the POST to elasticsearch, creating a new index based on timestamp data for the specific host
 		_, err = client.Index().
 			Index(index).
-			Type(host.Host).
+			Type(host.Time).
 			Id("1").
 			BodyJson(host).
 			Do()
@@ -48,7 +48,7 @@ func dumpToElastic(data []*HttpPost) {
 	}
 }
 
-func queryElastic(query string) (results HttpPost) {
+func queryHostnameLatest(query string) (results HttpPost) {
 	client, _ := elastic.NewClient()
 	hostQuery := elastic.NewQueryStringQuery(query)
 	searchResult, err := client.Search().
@@ -66,6 +66,32 @@ func queryElastic(query string) (results HttpPost) {
 			if err != nil {
 				log.Error(err)
 			}
+		}
+	}
+	return results
+}
+
+func queryHostnameAll(query string) (results []HttpPost) {
+	log.Debug("Getting last 10 results for ", query)
+	client, _ := elastic.NewClient()
+	hostQuery := elastic.NewQueryStringQuery(query)
+	searchResult, err := client.Search().
+		Query(&hostQuery).
+		From(0).Size(10).
+		Do()
+
+	if err != nil {
+		log.Error("Error during query: ", err)
+	}
+	var r HttpPost
+	if searchResult.Hits != nil {
+		log.Info("Hits: ", searchResult.Hits.TotalHits)
+		for _, hit := range searchResult.Hits.Hits {
+			err := json.Unmarshal(*hit.Source, &r)
+			if err != nil {
+				log.Error(err)
+			}
+			results = append(results, r)
 		}
 	}
 	return results

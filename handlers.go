@@ -54,16 +54,22 @@ func Agent(w http.ResponseWriter, r *http.Request) {
 // The host index
 func Console(w http.ResponseWriter, r *http.Request) {
 	log.Debug("/ GET")
-	host := "bohr.local"
-	queryElastic(host)
 }
 
-func ConsoleHostname(w http.ResponseWriter, r *http.Request) {
-	log.Debug("/host/hostname GET")
+func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	hostname := vars["hostname"]
-	results := queryElastic(hostname)
+	results := queryHostnameLatest(hostname)
 	log.Debug("New results for ", hostname, ":")
 	fmt.Println(results.Data)
+	fmt.Fprint(w, results)
+}
+
+func ConsoleHostnameRoot(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	hostname := vars["hostname"]
+	results := queryHostnameAll(hostname)
+	log.Debug("Queried all results for ", hostname)
+	fmt.Println(results)
 	fmt.Fprint(w, results)
 }
