@@ -31,14 +31,14 @@ func dumpToElastic(data []*HttpPost) {
 		host.Time = string(time.Now().Format("20060102150405"))
 		index := strings.Join([]string{strings.ToLower(host.Host), "-", host.Time}, "")
 		//index := strings.ToLower(host.Host)
-		b, err := client.IndexExists(index).Do()
-		if b == false {
-			log.Debug("Creating ES Index ", index, b)
-			_, err = client.CreateIndex(strings.ToLower(index)).Do()
-			if err != nil {
-				log.Warn("Index already created: ", index)
-			}
-		}
+		//		b, err := client.IndexExists(index).Do()
+		//		if b == false {
+		//			log.Debug("Creating ES Index ", index, b)
+		//			_, err = client.CreateIndex(strings.ToLower(index)).Do()
+		//			if err != nil {
+		//				log.Warn("Index already created: ", index)
+		//			}
+		//		}
 		_, err = client.Index().
 			Index(index).
 			BodyJson(host).
