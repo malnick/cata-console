@@ -25,4 +25,10 @@ var routes = Routes{
 		"/",
 		Console,
 	},
+	Route{
+		"HostnameRoot",
+		"GET",
+		"/host/{hostname}",
+		ConsoleHostname,
+	},
 }

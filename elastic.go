@@ -1,11 +1,11 @@
 package main
 
 import (
-	//"encoding/json"
+	"encoding/json"
 	log "github.com/Sirupsen/logrus"
 	"gopkg.in/olivere/elastic.v2"
 	"os"
-	"reflect"
+	//"reflect"
 	"strings"
 	"time"
 )
@@ -48,36 +48,28 @@ func dumpToElastic(data []*HttpPost) {
 	}
 }
 
-func queryElastic(query string) {
+func queryElastic(query string) (results HttpPost) {
 	client, _ := elastic.NewClient()
-	hostQuery := elastic.NewTermQuery("*", "*")
+	hostQuery := elastic.NewQueryStringQuery(query)
 	searchResult, err := client.Search().
-		Index(strings.Join([]string{query, "-*"}, "")).
-		Query(&hostQuery). // specify the query
-		Pretty(true).      // pretty print request and response JSON
-		Do()               // execute
+		Query(&hostQuery).
+		Do()
+
 	if err != nil {
-		// Handle error
-		log.Error("Error querying ", hostQuery)
-		panic(err)
+		log.Error("Error during query: ", err)
 	}
+
 	log.Info(searchResult)
-	var h HttpPost
-	for _, item := range searchResult.Each(reflect.TypeOf(h)) {
-		if t, ok := item.(HttpPost); ok {
-			log.Info(t.Host, t.Data)
+	if searchResult.Hits != nil {
+		log.Info("Hits: ", searchResult.Hits.TotalHits)
+		for _, hit := range searchResult.Hits.Hits {
+			err := json.Unmarshal(*hit.Source, &results)
+			if err != nil {
+				log.Error(err)
+			}
+			log.Info(results)
+			log.Info(results.Data)
 		}
 	}
-	//	if searchResult.Hits != nil {
-	//		log.Info("Hits: ", searchResult.Hits.TotalHits)
-	//		for _, hit := range searchResult.Hits.Hits {
-	//			var h HttpPost
-	//			err := json.Unmarshal(*hit.Source, &h)
-	//			if err != nil {
-	//				log.Error(err)
-	//			}
-	//			log.Info(h)
-	//			log.Info(h.Data)
-	//		}
-	//	}
+	return results
 }

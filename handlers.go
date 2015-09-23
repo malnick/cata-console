@@ -2,8 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	//"fmt"
+	"fmt"
 	log "github.com/Sirupsen/logrus"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
 )
@@ -55,4 +56,12 @@ func Console(w http.ResponseWriter, r *http.Request) {
 	log.Debug("/ GET")
 	host := "bohr.local"
 	queryElastic(host)
+}
+
+func ConsoleHostname(w http.ResponseWriter, r *http.Request) {
+	log.Debug("/host/hostname GET")
+	vars := mux.Vars(r)
+	hostname := vars["hostname"]
+	results := queryElastic(hostname)
+	fmt.Fprint(w, results)
 }
