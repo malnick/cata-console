@@ -20,12 +20,26 @@ func dumpToElastic(data []*HttpPost) {
 
 	// Create a new index for the host
 	for _, host := range data {
+		// Set index name
+		index := strings.ToLower(host.Host)
+		// Check index exists
+		b, err := client.IndexExists(index).Do()
+		if b == false {
+			log.Debug("Creating ES Index ", index)
+			_, err = client.CreateIndex(strings.ToLower(index)).Do()
+			if err != nil {
+				log.Warn("Index already created: ", index)
+			}
+		}
+
 		host.Time = string(time.Now().Format("20060102150405"))
-		index := strings.Join([]string{strings.ToLower(host.Host), "-", host.Time}, "")
+		//index := strings.Join([]string{strings.ToLower(host.Host), "-", host.Time}, "")
 
 		// Dump the POST to elasticsearch, creating a new index based on timestamp data for the specific host
 		_, err = client.Index().
 			Index(index).
+			Type(host.Host).
+			Id("1").
 			BodyJson(host).
 			Do()
 		if err != nil {
