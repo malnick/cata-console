@@ -53,4 +53,6 @@ func Agent(w http.ResponseWriter, r *http.Request) {
 // The host index
 func Console(w http.ResponseWriter, r *http.Request) {
 	log.Debug("/ GET")
+	host := "bohr.local"
+	queryElastic(host)
 }
