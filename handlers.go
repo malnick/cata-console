@@ -5,6 +5,7 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 )
@@ -71,5 +72,8 @@ func ConsoleHostnameRoot(w http.ResponseWriter, r *http.Request) {
 	results := queryHostnameAll(hostname)
 	log.Debug("Queried all results for ", hostname)
 	fmt.Println(results)
-	fmt.Fprint(w, results)
+
+	// Parse Template
+	t, _ := template.ParseFiles("index.html")
+	t.Execute(w, results)
 }
