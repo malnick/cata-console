@@ -63,5 +63,7 @@ func ConsoleHostname(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	hostname := vars["hostname"]
 	results := queryElastic(hostname)
+	log.Debug("New results for ", hostname, ":")
+	fmt.Println(results.Data)
 	fmt.Fprint(w, results)
 }

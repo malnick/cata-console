@@ -59,7 +59,6 @@ func queryElastic(query string) (results HttpPost) {
 		log.Error("Error during query: ", err)
 	}
 
-	log.Info(searchResult)
 	if searchResult.Hits != nil {
 		log.Info("Hits: ", searchResult.Hits.TotalHits)
 		for _, hit := range searchResult.Hits.Hits {
@@ -67,8 +66,6 @@ func queryElastic(query string) (results HttpPost) {
 			if err != nil {
 				log.Error(err)
 			}
-			log.Info(results)
-			log.Info(results.Data)
 		}
 	}
 	return results
