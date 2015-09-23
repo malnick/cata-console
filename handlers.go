@@ -10,6 +10,11 @@ import (
 	"net/http"
 )
 
+type AllHostDataPage struct {
+	Queries []HttpPost
+	Host    string
+}
+
 type HttpPost struct {
 	Host string
 	Data map[string]interface{}
@@ -72,8 +77,11 @@ func ConsoleHostnameRoot(w http.ResponseWriter, r *http.Request) {
 	results := queryHostnameAll(hostname)
 	log.Debug("Queried all results for ", hostname)
 	fmt.Println(results)
-
+	// New data page
+	var p AllHostDataPage
+	p.Queries = results
+	p.Host = vars["hostname"]
 	// Parse Template
-	t, _ := template.ParseFiles("index.html")
-	t.Execute(w, results)
+	t, _ := template.ParseFiles("AllHostData.html")
+	t.Execute(w, p)
 }
