@@ -15,6 +15,11 @@ type AllHostDataPage struct {
 	Host    string
 }
 
+type LatestHostDataPage struct {
+	Data HttpPost
+	Host string
+}
+
 type HttpPost struct {
 	Host string
 	Data map[string]interface{}
@@ -68,7 +73,13 @@ func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 	results := queryHostnameLatest(hostname)
 	log.Debug("New results for ", hostname, ":")
 	fmt.Println(results.Data)
-	fmt.Fprint(w, results)
+	// Latest data struct
+	var p LatestHostDataPage
+	// Execute template
+	p.Data = results
+	p.Host = hostname
+	t, _ := template.ParseFiles("views/LatestHostData.html")
+	t.Execute(w, p)
 }
 
 func ConsoleHostnameRoot(w http.ResponseWriter, r *http.Request) {
@@ -82,6 +93,6 @@ func ConsoleHostnameRoot(w http.ResponseWriter, r *http.Request) {
 	p.Queries = results
 	p.Host = vars["hostname"]
 	// Parse Template
-	t, _ := template.ParseFiles("AllHostData.html")
+	t, _ := template.ParseFiles("views/AllHostData.html")
 	t.Execute(w, p)
 }

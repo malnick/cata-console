@@ -14,28 +14,24 @@
       </div>
       <div class="panel panel-default">
       <div class="panel-heading">
-      <h2 class="panel-title">{{with .Host}}All Data for {{.}}{{end}}</h2>
+      <h2 class="panel-title">{{with .Host}}Latest Data for {{.}}{{end}}</h2>
       </div>
       <div class="panel-body">
-
-      {{with .Queries}}
-      {{range $i, $data := .}}
+      {{with .Data}}
       <table class="table table-bordered">
-        <tr>
-          <th><h3 class="text-capitalize">Timestamp<small> {{with .Time}}{{.}}{{end}}</small></h3></th>
-        </tr>
         <td>
         {{with .Data}}
         {{range $key, $value := .}}
-          <h4 class="text-capitalize">{{$key}}</h4>        
-            {{range $k, $v := $value}}
-              <b>{{$k}}</b>: {{$v}}
-            {{end}}          
-            {{end}}
-            {{end}}
+        <h3 class="text-capitalize">{{$key}}</h3>
+        {{range $k, $v := $value}}
+        <p>
+          <b>{{$k}}:</b> {{$v}}
+        </p>
+        {{end}}
+        {{end}}
+        {{end}}
         </td>
       </table>
-      {{end}}
       {{end}}
     </div>
   </body>
