@@ -9,13 +9,13 @@
   </head>
   <body>
     <div class="container">
-      <div class="page-header">
-        <h1>Cata Console<small> Container Data</small></h1>
-      </div>
-      <div class="panel panel-default">
       <div class="panel-heading">
-      <h2 class="panel-title">{{with .Host}}Latest Data for {{.}}{{end}}</h2>
+        <div class="page-header">
+          <nav class="navbar navbar-inverse navbar-fixed-top">
+            <h1 class="navbar-text navbar-center">{{with .Host}}{{.}}{{end}}<small> Latest Data</sma  ll></h1>
+        </nav>
       </div>
+    
       <div class="panel-body">
       {{with .Data}}
       <table class="table table-bordered">
