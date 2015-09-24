@@ -20,6 +20,10 @@ type LatestHostDataPage struct {
 	Host string
 }
 
+type MainPage struct {
+	AvailableHosts []string
+}
+
 type HttpPost struct {
 	Host string
 	Data map[string]interface{}
@@ -65,6 +69,12 @@ func Agent(w http.ResponseWriter, r *http.Request) {
 // The host index
 func Console(w http.ResponseWriter, r *http.Request) {
 	log.Debug("/ GET")
+	var p MainPage
+	hosts := queryAllHosts()
+	p.AvailableHosts = hosts
+	t, _ := template.ParseFiles("views/MainPage.html")
+	t.Execute(w, p)
+
 }
 
 func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
@@ -92,6 +102,9 @@ func ConsoleHostnameRoot(w http.ResponseWriter, r *http.Request) {
 	var p AllHostDataPage
 	p.Queries = results
 	p.Host = vars["hostname"]
+	log.Debug("RESULTS ", results)
+	log.Debug(p)
+
 	// Parse Template
 	t, _ := template.ParseFiles("views/AllHostData.html")
 	t.Execute(w, p)
