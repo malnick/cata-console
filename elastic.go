@@ -97,32 +97,30 @@ func queryHostnameAll(query string) (results []HttpPost) {
 	return results
 }
 
-func queryAllHosts() (results []string) {
+func queryAllHosts() map[string][]HttpPost {
 	log.Debug("Querying for All Hosts")
+	results := make(map[string][]HttpPost)
 	client, _ := elastic.NewClient()
 	// Define a wildcard query and execute it
-	q := elastic.NewWildcardQuery("host", "*")
+	q := elastic.NewQueryStringQuery("*")
+	log.Debug(q)
 	searchResult, err := client.Search().
-		Query(q).
+		Query(&q).
 		Do()
 	if err != nil {
 		log.Error(err)
 	}
 
-	var r struct {
-		Host string
-	}
+	var r HttpPost
 
 	if searchResult.Hits != nil {
 		log.Info("Hits: ", searchResult.Hits.TotalHits)
 		for _, hit := range searchResult.Hits.Hits {
 			err := json.Unmarshal(*hit.Source, &r)
-			log.Debug(r)
-			log.Debug(r.Host)
-			results = append(results, r.Host)
 			if err != nil {
 				log.Error(err)
 			}
+			results[r.Host] = append(results[r.Host], r)
 		}
 	}
 	return results
