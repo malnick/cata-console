@@ -1,0 +1,32 @@
+package main
+
+import (
+	"github.com/malnick/plot"
+	"github.com/malnick/plot/plotter"
+	"github.com/malnick/plot/plotutil"
+	"github.com/malnick/plot/vg"
+	"strings"
+)
+
+func plotMemory(host) {
+	p, err := plot.New()
+	if err != nil {
+		panic(err)
+	}
+
+	p.Title.Text = "Memory Usage"
+	p.X.Label.Text = "Percent Memory Used"
+	p.Y.Label.Text = "Time"
+
+	err = plotutil.AddLinePoints(p,
+		"Memory Used", getMemoryUsage(host, 15))
+	if err != nil {
+		panic(err)
+	}
+
+	// Save the plot to a PNG file.
+	hostPath := strings.Join([]string{host, "/memory.png"}, "")
+	if err := p.Save(4*vg.Inch, 4*vg.Inch, hostPath); err != nil {
+		panic(err)
+	}
+}
