@@ -23,9 +23,18 @@
           <th><h3 class="text-capitalize">{{$host}}<small> Cata Agent</small></h3></th>
         </tr>
         <td>
+          <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active"><a href="#">Home <span class="badge">42</span></a></li>
+            <li role="presentation"><a href="#">Profile</a></li>
+            <li role="presentation"><a href="#">Messages <span class="badge">3</span></a></li>
+          </ul>
+
           <div class="btn-group" role="group" aria-label="...">
             <button type="button" class="btn btn-default"><a href="host/{{$host}}/latest">Latest Data</a></button>
-            <button type="button" class="btn btn-default"><a href="host/{{$host}}">All Data</a></li></button>
+            <button type="button" class="btn btn-default"><a href="host/{{$host}}">All Data</a></button>
+            <button class="btn btn-primary" type="button">
+              All Data <span class="badge"><a href="host/{{$host}}">4</a></span>
+            </button>
           </div>
         </td>
       </table>
