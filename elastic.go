@@ -97,7 +97,7 @@ func queryHostnameAll(query string) (results []HttpPost) {
 	return results
 }
 
-func queryAllHosts() map[string][]HttpPost {
+func queryAllHosts(returnNumber int) map[string][]HttpPost {
 	log.Debug("Querying for All Hosts")
 	results := make(map[string][]HttpPost)
 	client, _ := elastic.NewClient()
@@ -106,6 +106,7 @@ func queryAllHosts() map[string][]HttpPost {
 	log.Debug(q)
 	searchResult, err := client.Search().
 		Query(&q).
+		From(0).Size(returnNumber).
 		Do()
 	if err != nil {
 		log.Error(err)
@@ -114,12 +115,12 @@ func queryAllHosts() map[string][]HttpPost {
 	var r HttpPost
 
 	if searchResult.Hits != nil {
-		log.Info("Hits: ", searchResult.Hits.TotalHits)
 		for _, hit := range searchResult.Hits.Hits {
 			err := json.Unmarshal(*hit.Source, &r)
 			if err != nil {
 				log.Error(err)
 			}
+			log.Debug(r.Host, " ", r.Data)
 			results[r.Host] = append(results[r.Host], r)
 		}
 	}
