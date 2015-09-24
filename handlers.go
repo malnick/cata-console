@@ -22,6 +22,7 @@ type LatestHostDataPage struct {
 
 type MainPage struct {
 	AvailableHosts []string
+	HostHits       map[string]int
 }
 
 type HttpPost struct {
@@ -70,13 +71,16 @@ func Agent(w http.ResponseWriter, r *http.Request) {
 func Console(w http.ResponseWriter, r *http.Request) {
 	log.Debug("/ GET")
 	var p MainPage
+	p.HostHits = make(map[string]int)
 	results := queryAllHosts(500)
 	for k, v := range results {
+		p.HostHits[k] = len(v)
 		p.AvailableHosts = append(p.AvailableHosts, k)
 		for key, value := range v {
 			log.Debug("Host ", k, " ", key, ": ", value)
 		}
 	}
+	log.Debug("Host hits: ", p.HostHits)
 	log.Debug("Available: ", p.AvailableHosts)
 	t, _ := template.ParseFiles("views/MainPage.html")
 	t.Execute(w, p)
