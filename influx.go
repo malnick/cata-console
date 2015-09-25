@@ -85,51 +85,45 @@ func influxify(data []*HttpPost) []client.Point {
 			// Define a new client point object and add data to it accordingly
 			var cp client.Point
 			cp.Time = time.Now()
+			cp.Fields[metricName] = make(map[string]map[string]interface{})
+
 			log.Debug(metricName)
 			// Ensure our assertion only passes maps of strings and strings
 			switch isMap := metricValues.(type) {
 			case map[string]interface{}:
-				log.Debug("passed map type assertion")
 				for metrickey, measurement := range isMap {
+					//cp.Fields[metricName][metrickey] = make(map[string]interface{})
 					switch measurement.(type) {
 					case float64:
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
-						log.Debug(measurement, " is of type float64")
 						cp.Measurement = metricName
-						cp.Fields = map[string]interface{}{
-							metrickey: measurement,
-						}
+						cp.Fields[metricName][metrickey] = measurement.(float64)
 					case int:
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
-						log.Debug(measurement, " is of type int")
 						cp.Measurement = metricName
 						cp.Fields = map[string]interface{}{
-							metrickey: measurement,
+							metrickey: measurement.(int),
 						}
 					case string:
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
-						log.Debug(measurement, " is of type string")
 						cp.Measurement = metricName
 						cp.Fields = map[string]interface{}{
-							metrickey: measurement,
+							metrickey: measurement.(string),
 						}
 					case int64:
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
-						log.Debug(measurement, " is of type int64")
 						cp.Measurement = metricName
 						cp.Fields = map[string]interface{}{
 							metrickey: measurement,
 						}
 					case uint:
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
-						log.Debug(measurement, " is of type uint")
 						cp.Measurement = metricName
 						cp.Fields = map[string]interface{}{
 							metrickey: measurement,
 						}
 					case uint64:
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
-						log.Debug(measurement, " is of type uint64")
 						cp.Measurement = metricName
 						cp.Fields = map[string]interface{}{
 							metrickey: measurement,
@@ -142,6 +136,7 @@ func influxify(data []*HttpPost) []client.Point {
 			// Add our new point to the point arry
 			cpArry = append(cpArry, cp)
 		}
+
 	}
 	log.Debug(cpArry)
 	return cpArry
