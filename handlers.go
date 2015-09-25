@@ -62,7 +62,8 @@ func Agent(w http.ResponseWriter, r *http.Request) {
 		log.Debug("New data from ", r.Host)
 		log.Debug(r.Data)
 		hostDataArry = append(hostDataArry, r)
-		dumpToElastic(hostDataArry)
+		//		dumpToElastic(hostDataArry)
+		dumpToInflux(r.Host, hostDataArry)
 	}
 
 }
