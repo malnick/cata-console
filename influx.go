@@ -45,6 +45,7 @@ func SetInflux() *client.Client {
 
 }
 
+// Send commands to do things in influx, return the response.
 func queryDB(con *client.Client, cmd string, db string) (res []client.Result, err error) {
 	log.Debug("Influx Query: ", cmd)
 	q := client.Query{
@@ -60,6 +61,7 @@ func queryDB(con *client.Client, cmd string, db string) (res []client.Result, er
 	return
 }
 
+// Query influx and see what we get back. Return an error if one exists.
 func CheckDb(con *client.Client, db string) error {
 	_, err := queryDB(con, fmt.Sprintf("CREATE DATABASE %s", db), db)
 	if err != nil {
@@ -83,10 +85,14 @@ func influxify(data []*HttpPost) []client.Point {
 			//var cp client.Point
 			log.Debug(metricName)
 			// Ensure our assertion only passes maps of strings and strings
-			if _, ok := metricValues.(map[string]string); ok {
-				for metrickey, measurement := range metricValues.(map[string]string) {
+			switch isMap := metricValues.(type) {
+			case map[string]string:
+				log.Debug("passed map type assertion")
+				for metrickey, measurement := range isMap {
 					log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 				}
+			default:
+				log.Debug("No maps found")
 			}
 		}
 	}
