@@ -68,7 +68,10 @@ func CheckDb(con *client.Client, db string) error {
 	return nil
 }
 
-func influxify(data []*HttpPost) {
+func influxify(data []*HttpPost) []client.Point {
+	// Define our client point array
+	var cpArry []client.Point
+	// For each post in posts, dump the json to line protocol format
 	for key, values := range data {
 		log.Debug("Influxifying data for ", values.Host)
 		log.Debug("Post ", key+1, " of ", len(data))
@@ -76,11 +79,18 @@ func influxify(data []*HttpPost) {
 		// Build the dump into line protocol format
 		// ex: memory,host=$hostname $memoryKey1=$memoryValue1,$memoryKey2=$memoryValue2 $timestamp
 		for metricName, metricValues := range values.Data {
+			// Define a new client point object and add data to it accordingly
+			//var cp client.Point
 			log.Debug(metricName)
-			log.Debug(metricValues)
+			// Ensure our assertion only passes maps of strings and strings
+			if _, ok := metricValues.(map[string]string); ok {
+				for metrickey, measurement := range metricValues.(map[string]string) {
+					log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
+				}
+			}
 		}
 	}
-
+	return cpArry
 }
 
 func dumpToInflux(host string, data []*HttpPost) (response string, err error) {
