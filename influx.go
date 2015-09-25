@@ -68,6 +68,21 @@ func CheckDb(con *client.Client, db string) error {
 	return nil
 }
 
+func influxify(data []*HttpPost) {
+	for key, values := range data {
+		log.Debug("Influxifying data for ", values.Host)
+		log.Debug("Post ", key+1, " of ", len(data))
+		// Parse the metrics and values
+		// Build the dump into line protocol format
+		// ex: memory,host=$hostname $memoryKey1=$memoryValue1,$memoryKey2=$memoryValue2 $timestamp
+		for metricName, metricValues := range values.Data {
+			log.Debug(metricName)
+			log.Debug(metricValues)
+		}
+	}
+
+}
+
 func dumpToInflux(host string, data []*HttpPost) (response string, err error) {
 	log.Debug(fmt.Sprintf("%s: %s", host, data))
 	// Create an influx client
@@ -78,7 +93,8 @@ func dumpToInflux(host string, data []*HttpPost) (response string, err error) {
 		log.Warn(fmt.Sprintf("Database %s: %s", InfluxDb, err))
 	}
 	// Influxify the JSON
-	influxData := influxify(data)
+	//influxData :=
+	influxify(data)
 	// Dump the data
 	return "this", nil
 }
