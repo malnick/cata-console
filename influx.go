@@ -82,10 +82,12 @@ func influxify(data []*HttpPost) []client.Point {
 		// Build the dump into line protocol format
 		// ex: memory,host=$hostname $memoryKey1=$memoryValue1,$memoryKey2=$memoryValue2 $timestamp
 		for metricName, metricValues := range values.Data {
+			if metricValues == "null" {
+				log.Warn("Metric values for ", metricName, " are null")
+				break
+			}
 			// Define a new client point object and add data to it accordingly
 			var cp client.Point
-			cp.Time = time.Now()
-			cp.Measurement = metricName
 			cp.Fields = make(map[string]interface{})
 			log.Debug(metricName)
 			// Ensure our assertion only passes maps of strings and strings
@@ -95,15 +97,20 @@ func influxify(data []*HttpPost) []client.Point {
 					//cp.Fields[metricName][metrickey] = make(map[string]interface{})
 					switch measurement.(type) {
 					case float64:
+						cp.Time = time.Now()
+						cp.Measurement = metricName
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(float64)
 					case int:
+						cp.Time = time.Now()
+						cp.Measurement = metricName
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(int)
 					case string:
+						cp.Time = time.Now()
+						cp.Measurement = metricName
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(string)
-
 					case int64:
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(int64)
@@ -135,9 +142,17 @@ func dumpToInflux(host string, data []*HttpPost) (response string, err error) {
 	if err != nil {
 		log.Warn(fmt.Sprintf("Database %s: %s", InfluxDb, err))
 	}
-	// Influxify the JSON
-	//influxData :=
-	influxify(data)
 	// Dump the data
-	return "this", nil
+	batchDump := client.BatchPoints{
+		Points:          influxify(data),
+		Database:        InfluxDb,
+		RetentionPolicy: "default",
+	}
+	_, err = influxClient.Write(batchDump)
+	if err != nil {
+		log.Error("Could not dump data to ", InfluxDb)
+		log.Error(err)
+		return "Error", err
+	}
+	return "Success - data dumped to InfluxDB", nil
 }
