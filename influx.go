@@ -10,10 +10,9 @@ import (
 )
 
 const (
-	InfluxHost       = "localhost"
-	InfluxPort       = 8086
-	InfluxDb         = "hosts"
-	HostMeasurements = "shapes"
+	InfluxHost = "localhost"
+	InfluxPort = 8086
+	InfluxDb   = "hosts"
 )
 
 func SetInflux() *client.Client {
@@ -47,7 +46,7 @@ func SetInflux() *client.Client {
 }
 
 // Send commands to do things in influx, return the response.
-func queryDB(con *client.Client, cmd string, db string) (res []client.Result, err error) {
+func queryInfluxDb(con *client.Client, cmd string, db string) (res []client.Result, err error) {
 	log.Debug("Influx Query: ", cmd)
 	q := client.Query{
 		Command:  cmd,
@@ -64,7 +63,7 @@ func queryDB(con *client.Client, cmd string, db string) (res []client.Result, er
 
 // Query influx and see what we get back. Return an error if one exists.
 func CheckDb(con *client.Client, db string) error {
-	_, err := queryDB(con, fmt.Sprintf("CREATE DATABASE %s", db), db)
+	_, err := queryInfluxDb(con, fmt.Sprintf("CREATE DATABASE %s", db), db)
 	if err != nil {
 		return err
 	}
@@ -90,11 +89,10 @@ func influxify(data []*HttpPost) []client.Point {
 			var cp client.Point
 			cp.Fields = make(map[string]interface{})
 			log.Debug(metricName)
-			// Ensure our assertion only passes maps of strings and strings
+			// Ensure our assertion type checks appropriately
 			switch isMap := metricValues.(type) {
 			case map[string]interface{}:
 				for metrickey, measurement := range isMap {
-					//cp.Fields[metricName][metrickey] = make(map[string]interface{})
 					switch measurement.(type) {
 					case float64:
 						cp.Time = time.Now()
