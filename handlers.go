@@ -6,7 +6,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 	//	"github.com/influxdb/influxdb/client"
-	"github.com/influxdb/influxdb/client"
+	//	"github.com/influxdb/influxdb/client"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -23,7 +23,7 @@ type LatestHostDataPage struct {
 }
 
 type MainPage struct {
-	AvailableHosts []client.Result
+	AvailableHosts []string
 	HostHits       int
 }
 
@@ -79,18 +79,23 @@ func Console(w http.ResponseWriter, r *http.Request) {
 	// Get a local main page struct to dump our data to
 	var p MainPage
 	// Use a helper function to return all distinct hostnames from influx
-	AvailableHosts, err := getUniqueHosts()
+	results, err := getUniqueHosts()
 	// If things go wrong error but keep running
 	if err != nil {
 		log.Error(err)
 	}
-	p.AvailableHosts = AvailableHosts
 	// queryInflux retuns a []client.Result
-	for _, v := range p.AvailableHosts {
-		log.Debug("New hit ", v)
+	// for each query, range over and find the values of each series.
+	// In the case of getUniqueHosts we have only a single return plus a timestamp
+	// which we get by [0][1] and then type asserting our interface to a string and
+	// appending that to our array to pass into the MainPage struct.
+	for _, v := range results {
+		log.Debug("Hosts: ", v.Series[0].Values[0][1])
+		for _, host := range v.Series[0].Values[0][1].([]interface{}) {
+			log.Debug(host.(string))
+			p.AvailableHosts = append(p.AvailableHosts, host.(string))
+		}
 	}
-	log.Debug("Host hits: ", p.HostHits)
-	log.Debug("Available: ", p.AvailableHosts)
 	t, _ := template.ParseFiles("views/MainPage.html")
 	t.Execute(w, p)
 
