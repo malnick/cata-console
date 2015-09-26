@@ -87,7 +87,10 @@ func influxify(data []*HttpPost) []client.Point {
 			}
 			// Define a new client point object and add data to it accordingly
 			var cp client.Point
+			// Initialize a new map of interfaces for our json from the agent
 			cp.Fields = make(map[string]interface{})
+			cp.Tags = make(map[string]string)
+			// The metric we're about to influxify
 			log.Debug(metricName)
 			// Ensure our assertion type checks appropriately
 			switch isMap := metricValues.(type) {
@@ -95,34 +98,46 @@ func influxify(data []*HttpPost) []client.Point {
 				for metrickey, measurement := range isMap {
 					switch measurement.(type) {
 					case float64:
+						// Same for each block
+						// Add timestamp
 						cp.Time = time.Now()
+						// add the measurement
 						cp.Measurement = metricName
+						// add the measurement to the metrickey with correct type assertion
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(float64)
+						// tag it with the hostname for easy query later
+						cp.Tags["hostname"] = values.Host
 					case int:
 						cp.Time = time.Now()
 						cp.Measurement = metricName
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(int)
+						cp.Tags["hostname"] = values.Host
 					case string:
 						cp.Time = time.Now()
 						cp.Measurement = metricName
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(string)
+						cp.Tags["hostname"] = values.Host
 					case int64:
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(int64)
+						cp.Tags["hostname"] = values.Host
 					case uint:
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(uint)
+						cp.Tags["hostname"] = values.Host
 					case uint64:
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(uint64)
+						cp.Tags["hostname"] = values.Host
 					}
 				}
 			default:
 				log.Debug("No maps found")
 			}
+
 			// Add our new point to the point arry
 			cpArry = append(cpArry, cp)
 		}
