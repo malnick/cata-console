@@ -169,3 +169,20 @@ func dumpToInflux(host string, data []*HttpPost) (response string, err error) {
 	}
 	return "Success - data dumped to InfluxDB", nil
 }
+
+func getUniqueHosts() ([]client.Result, error) {
+	log.Debug("Getting distinct hosts")
+	// Get a fresh client
+	influxClient := SetInflux()
+	// Query influx for distinct hosts
+	cmd := "select distinct(hostname) from host"
+	distinctHosts, err := queryInfluxDb(influxClient, cmd, InfluxDb)
+	if err != nil {
+		return nil, err
+	}
+	for k, v := range distinctHosts {
+		log.Debug("UNIQUE HOST: ", k, " ", v)
+	}
+	// return the results
+	return distinctHosts, nil
+}

@@ -6,6 +6,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 	//	"github.com/influxdb/influxdb/client"
+	"github.com/influxdb/influxdb/client"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -22,7 +23,7 @@ type LatestHostDataPage struct {
 }
 
 type MainPage struct {
-	AvailableHosts []string
+	AvailableHosts []client.Result
 	HostHits       int
 }
 
@@ -32,7 +33,8 @@ type HttpPost struct {
 	Time string
 }
 
-// The container index
+// /agent route - handles POSTs from aggregated agents
+// dumps the POST to influxDb
 func Agent(w http.ResponseWriter, r *http.Request) {
 	log.Debug("/agent POST")
 	// Make a channel to dump our requests asynchronously
@@ -66,24 +68,26 @@ func Agent(w http.ResponseWriter, r *http.Request) {
 		//		dumpToElastic(hostDataArry)
 		dumpToInflux(r.Host, hostDataArry)
 	}
-
 }
 
 // The console root index /
+// main console route:
+//   - Displays known hosts, and basic info about them such as alarms
+//   or other unique, top level data.
 func Console(w http.ResponseWriter, r *http.Request) {
 	log.Debug("/ GET")
+	// Get a local main page struct to dump our data to
 	var p MainPage
-	var con = SetInflux()
-	// Select all queries up to 20 results
-	results, err := queryInfluxDb(con, fmt.Sprintf("select * from /.*/ limit %d", 20), "hosts")
+	// Use a helper function to return all distinct hostnames from influx
+	AvailableHosts, err := getUniqueHosts()
 	// If things go wrong error but keep running
 	if err != nil {
 		log.Error(err)
 	}
+	p.AvailableHosts = AvailableHosts
 	// queryInflux retuns a []client.Result
-	for _, v := range results {
+	for _, v := range p.AvailableHosts {
 		log.Debug("New hit ", v)
-		p.HostHits = len(results)
 	}
 	log.Debug("Host hits: ", p.HostHits)
 	log.Debug("Available: ", p.AvailableHosts)
