@@ -92,7 +92,6 @@ func Console(w http.ResponseWriter, r *http.Request) {
 	for _, v := range results {
 		log.Debug("Hosts: ", v.Series[0].Values[0][1])
 		for _, host := range v.Series[0].Values[0][1].([]interface{}) {
-			log.Debug(host.(string))
 			p.AvailableHosts = append(p.AvailableHosts, host.(string))
 		}
 	}

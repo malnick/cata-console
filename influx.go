@@ -180,9 +180,6 @@ func getUniqueHosts() ([]client.Result, error) {
 	if err != nil {
 		return nil, err
 	}
-	for k, v := range distinctHosts {
-		log.Debug("UNIQUE HOST: ", k, " ", v)
-	}
 	// return the results
 	return distinctHosts, nil
 }
