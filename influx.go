@@ -107,7 +107,7 @@ func influxify(data []*HttpPost) []client.Point {
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(float64)
 						// tag it with the hostname for easy query later
-						cp.Tags["hostname"] = values.Host
+						cp.Tags["hostname"] = "test"
 					case int:
 						cp.Time = time.Now()
 						cp.Measurement = metricName
@@ -121,14 +121,17 @@ func influxify(data []*HttpPost) []client.Point {
 						cp.Fields[metrickey] = measurement.(string)
 						cp.Tags["hostname"] = values.Host
 					case int64:
+						cp.Time = time.Now()
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(int64)
 						cp.Tags["hostname"] = values.Host
 					case uint:
+						cp.Time = time.Now()
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(uint)
 						cp.Tags["hostname"] = values.Host
 					case uint64:
+						cp.Time = time.Now()
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(uint64)
 						cp.Tags["hostname"] = values.Host
@@ -137,7 +140,12 @@ func influxify(data []*HttpPost) []client.Point {
 			default:
 				log.Debug("No maps found")
 			}
-
+			// Let's check out data
+			log.Info("New data for ", values.Host)
+			log.Info("Tags: ", cp.Tags)
+			log.Info("Measurement: ", cp.Measurement)
+			log.Info("Fields: ", cp.Fields)
+			log.Info("Timestamp: ", cp.Time)
 			// Add our new point to the point arry
 			cpArry = append(cpArry, cp)
 		}
@@ -182,4 +190,17 @@ func getUniqueHosts() ([]client.Result, error) {
 	}
 	// return the results
 	return distinctHosts, nil
+}
+
+func getLatestHostData(host string) ([]client.Result, error) {
+	log.Debug("Getting latest data for host ", host)
+	// Get a new client
+	influxClient := SetInflux()
+	// Create the cmd to get latest data for host
+	cmd := fmt.Sprintf("select * from /.*/ where hostname = '%s' limit 1", host)
+	latestData, err := queryInfluxDb(influxClient, cmd, InfluxDb)
+	if err != nil {
+		return latestData, err
+	}
+	return latestData, nil
 }
