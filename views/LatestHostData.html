@@ -18,20 +18,18 @@
     
       <div class="panel-body">
       {{with .Data}}
+      {{range $key, $value := .}}
       <table class="table table-bordered">
         <td>
-        {{with .Data}}
-        {{range $key, $value := .}}
-        <h3 class="text-capitalize">{{$key}}</h3>
+        <h3 class="text-capitalize">{{$key}} Data</h3>
         {{range $k, $v := $value}}
         <p>
           <b>{{$k}}:</b> {{$v}}
         </p>
         {{end}}
-        {{end}}
-        {{end}}
         </td>
       </table>
+      {{end}}
       {{end}}
     </div>
   </body>
