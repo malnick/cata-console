@@ -12,7 +12,7 @@ import (
 )
 
 type AllHostDataPage struct {
-	Queries []map[string]map[string]interface{}
+	Queries map[string]map[string]interface{}
 	Host    string
 }
 
@@ -125,16 +125,27 @@ func ConsoleHostnameRoot(w http.ResponseWriter, r *http.Request) {
 	hostname := vars["hostname"]
 	results, _ := getAllHostData(hostname)
 	log.Debug("Queried all results for ", hostname)
+	//for _, v := range results {
+	//	for _, values := range v.Series {
+	//		for _, data := range values.Values {
+	//			log.Debug(data[0], ": ", data)
+	//		}
+	//	}
+	//}
 	// New data page
 	var p AllHostDataPage
-	for k, v := range results {
-		log.Debug(k, " ", v)
-		mapped := transformResultsToMap(results)
-		p.Queries = append(p.Queries, mapped)
-	}
+	mapped := transformResultsToMap(results)
+
+	//	for measurement, timestamp := range mapped {
+	//		log.Debug(measurement)
+	//		log.Debug(timestamp)
+	//		for metric, value := range timestamp {
+	//			log.Debug(metric, "=", value)
+	//		}
+	//	}
+	p.Queries = mapped
+
 	p.Host = vars["hostname"]
-	log.Debug("RESULTS ", results)
-	log.Debug(p)
 
 	// Parse Template
 	t, _ := template.ParseFiles("views/AllHostData.html")

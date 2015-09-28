@@ -40,7 +40,7 @@ func getAllHostData(host string) ([]client.Result, error) {
 	// Get the new client
 	influxClient := SetInflux()
 	// Cmd to query all data for host
-	cmd := fmt.Sprintf("select * from /.*/ where hostname = '%s'", host)
+	cmd := fmt.Sprintf("select * from /.*/ where hostname = '%s' limit 3", host)
 	allData, err := queryInfluxDb(influxClient, cmd, InfluxDb)
 	if err != nil {
 		return allData, err
@@ -49,17 +49,51 @@ func getAllHostData(host string) ([]client.Result, error) {
 	return allData, nil
 }
 
-func transformResultsToMap(input []client.Result) (output map[string]map[string]interface{}) {
+// accepts []client.result and returns map[timestamp][measurement][metric] = value
+func transformResultsToMap(input []client.Result) (output map[string]map[string]map[string]string) {
 	// Accepts client.Result and maps it into a usable data structure for our pages
-	output = make(map[string]map[string]interface{})
+	log.Warn(input)
+
+	//output = make(map[string]map[string]interface{})
+
+	// There is only a single index [0] returned from influx
 	for _, v := range input {
+		// v.Series is the tablature data
 		for _, values := range v.Series {
-			output[values.Name] = make(map[string]interface{})
+			// Create a new output key from the value of the tablature data
+
+			//REDO
+			//output[values.Name] = make(map[string]interface{})
+
+			// For each index and metric column, range over
 			for i, mc := range values.Columns {
-				if values.Values[0][i] != nil {
-					output[values.Name][mc] = values.Values[0][i]
+
+				//REDO
+				//output[values.Name][mc] = make(map[string]string)
+
+				// For each metric index and metric values, range
+				for _, mv := range values.Values {
+					if mv[i] != nil {
+
+						//log.Debug("TIME ", mv[0])
+						timestamp := mv[0].(string)
+
+						log.Warn("COLUMN ", mc)
+						// Init a new map for the tablature name with a key for the metric
+						//output[values.Name][mc] = make(map[string]interface{})
+
+						log.Warn(timestamp, ": ", mv[i])
+
+						output[values.Name][mc][timestamp] = string(mv[i].(string))
+					}
 				}
 			}
+		}
+	}
+	for k, v := range output {
+		log.Warn(k)
+		for key, value := range v {
+			log.Warn(key, " ", value)
 		}
 	}
 	return output
