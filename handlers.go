@@ -102,28 +102,18 @@ func Console(w http.ResponseWriter, r *http.Request) {
 func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	hostname := vars["hostname"]
+
+	// Get a local Latest Host Data strcut and init a new map for the
+	var p LatestHostDataPage
 	results, err := getLatestHostData(hostname)
 	if err != nil {
 		log.Error(err)
 	}
-	// Get a local Latest Host Data strcut and init a new map for the
 	// data parameter
-	var p LatestHostDataPage
 	p.Data = transformResultsToMap(results) // make(map[string]map[string]interface{})
 
 	log.Debug("Latest data for ", hostname, ":")
-	// For all results, map them into a map of their parts by name
-	//	for _, v := range results {
-	//		for _, values := range v.Series {
-	//			p.Data[values.Name] = make(map[string]interface{})
-	//			for i, mc := range values.Columns {
-	//				if values.Values[0][i] != nil {
-	//					p.Data[values.Name][mc] = values.Values[0][i]
-	//				}
-	//			}
-	//		}
-	//	}
-	log.Debug(p.Data)
+
 	// Execute template
 	p.Host = hostname
 	t, _ := template.ParseFiles("views/LatestHostData.html")
@@ -139,6 +129,8 @@ func ConsoleHostnameRoot(w http.ResponseWriter, r *http.Request) {
 	var p AllHostDataPage
 	for k, v := range results {
 		log.Debug(k, " ", v)
+		mapped := transformResultsToMap(results)
+		p.Queries = append(p.Queries, mapped)
 	}
 	p.Host = vars["hostname"]
 	log.Debug("RESULTS ", results)
