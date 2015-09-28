@@ -6,7 +6,6 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 	//	"github.com/influxdb/influxdb/client"
-	//	"github.com/influxdb/influxdb/client"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -18,7 +17,7 @@ type AllHostDataPage struct {
 }
 
 type LatestHostDataPage struct {
-	Data HttpPost
+	Data string
 	Host string
 }
 
@@ -103,13 +102,21 @@ func Console(w http.ResponseWriter, r *http.Request) {
 func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	hostname := vars["hostname"]
-	results := queryHostnameLatest(hostname)
-	log.Debug("New results for ", hostname, ":")
-	fmt.Println(results.Data)
-	// Latest data struct
+	results, err := getLatestHostData(hostname)
+	if err != nil {
+		log.Error(err)
+	}
+
 	var p LatestHostDataPage
+	log.Warn("Latest data for ", hostname, ":")
+	for _, v := range results {
+		log.Warn(v.Series[0].Values[0])
+		for _, values := range v.Series {
+			log.Warn(values)
+		}
+	}
+	// Latest data struct
 	// Execute template
-	p.Data = results
 	p.Host = hostname
 	t, _ := template.ParseFiles("views/LatestHostData.html")
 	t.Execute(w, p)
