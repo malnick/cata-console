@@ -17,7 +17,7 @@ type AllHostDataPage struct {
 }
 
 type LatestHostDataPage struct {
-	Data string
+	Data map[string]map[string]interface{}
 	Host string
 }
 
@@ -106,19 +106,24 @@ func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Error(err)
 	}
-
+	// Get a local Latest Host Data strcut and init a new map for the
+	// data parameter
 	var p LatestHostDataPage
-	log.Warn("Latest data for ", hostname, ":")
+	p.Data = make(map[string]map[string]interface{})
+
+	log.Debug("Latest data for ", hostname, ":")
+	// For all results, map them into a map of their parts by name
 	for _, v := range results {
-		log.Warn(v.Series[0].Values[0])
 		for _, values := range v.Series {
-			log.Warn(values)
-			for _, va := range values {
-				log.Warn(va)
+			p.Data[values.Name] = make(map[string]interface{})
+			for i, mc := range values.Columns {
+				if values.Values[0][i] != nil {
+					p.Data[values.Name][mc] = values.Values[0][i]
+				}
 			}
 		}
 	}
-	// Latest data struct
+	log.Debug(p.Data)
 	// Execute template
 	p.Host = hostname
 	t, _ := template.ParseFiles("views/LatestHostData.html")
