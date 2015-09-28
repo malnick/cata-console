@@ -1,3 +1,5 @@
+// THe main Influx DB handlers.
+
 package main
 
 import "github.com/influxdb/influxdb/client"
@@ -70,6 +72,7 @@ func CheckDb(con *client.Client, db string) error {
 	return nil
 }
 
+// Accepts HTTP POST data and turns it into line protocol format
 func influxify(data []*HttpPost) []client.Point {
 	// Define our client point array
 	var cpArry []client.Point
@@ -154,6 +157,8 @@ func influxify(data []*HttpPost) []client.Point {
 	return cpArry
 }
 
+// Accepts the hostname and the data from the JSON POST and sends that data to the
+// influxifier to be dumped into influx in line protocol format
 func dumpToInflux(host string, data []*HttpPost) (response string, err error) {
 	log.Debug(fmt.Sprintf("%s: %s", host, data))
 	// Create an influx client
@@ -176,31 +181,4 @@ func dumpToInflux(host string, data []*HttpPost) (response string, err error) {
 		return "Error", err
 	}
 	return "Success - data dumped to InfluxDB", nil
-}
-
-func getUniqueHosts() ([]client.Result, error) {
-	log.Debug("Getting distinct hosts")
-	// Get a fresh client
-	influxClient := SetInflux()
-	// Query influx for distinct hosts
-	cmd := "select distinct(hostname) from host"
-	distinctHosts, err := queryInfluxDb(influxClient, cmd, InfluxDb)
-	if err != nil {
-		return nil, err
-	}
-	// return the results
-	return distinctHosts, nil
-}
-
-func getLatestHostData(host string) ([]client.Result, error) {
-	log.Debug("Getting latest data for host ", host)
-	// Get a new client
-	influxClient := SetInflux()
-	// Create the cmd to get latest data for host
-	cmd := fmt.Sprintf("select * from /.*/ where hostname = '%s' limit 1", host)
-	latestData, err := queryInfluxDb(influxClient, cmd, InfluxDb)
-	if err != nil {
-		return latestData, err
-	}
-	return latestData, nil
 }

@@ -113,6 +113,9 @@ func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 		log.Warn(v.Series[0].Values[0])
 		for _, values := range v.Series {
 			log.Warn(values)
+			for _, va := range values {
+				log.Warn(va)
+			}
 		}
 	}
 	// Latest data struct
