@@ -1,5 +1,5 @@
-# Cata Console
-Container data console. Listens for POSTs from cata-agents and displays host/docker information. Manages alerts and external services to alert to. 
+# Kestrel Console 
+Listens for POSTs from kestrel agents and displays host/docker information. Manages alerts and external services to alert to. 
 
 ## Development
 ### Requires
