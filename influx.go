@@ -42,7 +42,7 @@ func SetInflux() *client.Client {
 		log.Error("Unable to run con.Ping() ", dur, " ", ver)
 		log.Fatal(err)
 	}
-	log.Printf("Influx OK - response time %v, version %s", dur, ver)
+	log.Info(fmt.Sprintf("Influx OK - response time %v, version %s", dur, ver))
 	return con
 
 }

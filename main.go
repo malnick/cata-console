@@ -9,6 +9,7 @@ import (
 
 // Define flags
 var verbose = flag.Bool("v", false, "Define verbose logging output.")
+var port = flag.String("p", "9000", "Port to run.")
 
 func main() {
 	// Banner
@@ -50,5 +51,5 @@ func main() {
 	// Run the router
 	router := NewRouter()
 	// Handle a failure
-	log.Fatal(http.ListenAndServe(":9000", router))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", *port), router))
 }

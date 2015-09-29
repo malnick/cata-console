@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"os"
 	"regexp"
@@ -56,6 +57,10 @@ func ParseConfig() (c Config) {
 		log.Info("Loglevel: Info")
 		c.LogLevel = "Info"
 	}
+	log.Info(fmt.Sprintf("Console running on :%s", *port))
+	// Check influx connection
+	_ = SetInflux()
+
 	c = ParseEnv(c)
 	return c
 }
