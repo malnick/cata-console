@@ -1,0 +1,57 @@
+package main
+
+import (
+	"fmt"
+	"path"
+	"strings"
+)
+
+// Path makes a string safe to use as an url path.
+func SanitizePath(s string) string {
+	// Start with lowercase string
+	filePath := strings.ToLower(s)
+	filePath = strings.Replace(filePath, ".", "", -1)
+	filePath = strings.Replace(filePath, ":", "", -1)
+	filePath = strings.Replace(filePath, "-", "", -1)
+
+	filePath = path.Clean(filePath)
+
+	// NB this may be of length 0, caller must check
+	return filePath
+}
+
+func UnsanitizePath(this string) string {
+	s := strings.Split(this, "")
+	newArry := []string{
+		string(s[0]),
+		string(s[1]),
+		string(s[2]),
+		string(s[3]),
+		"-",
+		string(s[4]),
+		string(s[5]),
+		"-",
+		string(s[6]),
+		string(s[7]),
+		string(s[8]),
+		string(s[9]),
+		string(s[10]),
+		":",
+		string(s[11]),
+		string(s[12]),
+		":",
+		string(s[13]),
+		string(s[14]),
+	}
+	return strings.Join(newArry, "")
+
+}
+
+func main() {
+	unsanitized := "2015-09-29T20:27:45.827633069Z"
+	sanitized := SanitizePath(unsanitized)
+	fmt.Println(sanitized)
+	unsanitizedNew := UnsanitizePath(sanitized)
+	fmt.Println(unsanitizedNew)
+	fmt.Println(unsanitized)
+}
