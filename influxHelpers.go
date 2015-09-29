@@ -9,7 +9,8 @@ import (
 	"github.com/influxdb/influxdb/client"
 )
 
-func getUniqueHosts() ([]client.Result, error) {
+func getUniqueHosts() ([]string, error) {
+	var uniqueHosts = []string{}
 	log.Debug("Getting distinct hosts")
 	// Get a fresh client
 	influxClient := SetInflux()
@@ -19,8 +20,14 @@ func getUniqueHosts() ([]client.Result, error) {
 	if err != nil {
 		return nil, err
 	}
+	for _, v := range distinctHosts {
+		log.Debug("Hosts: ", v.Series[0].Values[0][1])
+		for _, host := range v.Series[0].Values[0][1].([]interface{}) {
+			uniqueHosts = append(uniqueHosts, host.(string))
+		}
+	}
 	// return the results
-	return distinctHosts, nil
+	return uniqueHosts, nil
 }
 
 func getLatestHostData(host string) ([]client.Result, error) {
@@ -48,6 +55,18 @@ func getAllHostData(host string) ([]client.Result, error) {
 	}
 
 	return allData, nil
+}
+
+// Counts all entries a host has in the DB
+func countHostEntries(host string) ([]client.Result, error) {
+	log.Debug("Counting host entries for ", host)
+	influxClient := SetInflux()
+	cmd := fmt.Sprintf("select count(hostname) from /.*/ where hostname = '%s'", host)
+	resp, err := queryInfluxDb(influxClient, cmd, InfluxDb)
+	if err != nil {
+		return resp, err
+	}
+	return resp, nil
 }
 
 // accepts []client.result and returns map[measurement][metric][]map[timestamp] = value

@@ -23,7 +23,7 @@ type LatestHostDataPage struct {
 
 type MainPage struct {
 	AvailableHosts []string
-	HostHits       int
+	HostHits       map[string]string
 }
 
 type HttpPost struct {
@@ -83,17 +83,7 @@ func Console(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Error(err)
 	}
-	// queryInflux retuns a []client.Result
-	// for each query, range over and find the values of each series.
-	// In the case of getUniqueHosts we have only a single return plus a timestamp
-	// which we get by [0][1] and then type asserting our interface to a string and
-	// appending that to our array to pass into the MainPage struct.
-	for _, v := range results {
-		log.Debug("Hosts: ", v.Series[0].Values[0][1])
-		for _, host := range v.Series[0].Values[0][1].([]interface{}) {
-			p.AvailableHosts = append(p.AvailableHosts, host.(string))
-		}
-	}
+	p.AvailableHosts = results
 	t, _ := template.ParseFiles("views/MainPage.html")
 	t.Execute(w, p)
 
@@ -123,26 +113,13 @@ func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 func ConsoleHostnameRoot(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	hostname := vars["hostname"]
+	// Query all host data
 	results, _ := getAllHostData(hostname)
 	log.Debug("Queried all results for ", hostname)
-	//for _, v := range results {
-	//	for _, values := range v.Series {
-	//		for _, data := range values.Values {
-	//			log.Debug(data[0], ": ", data)
-	//		}
-	//	}
-	//}
 	// New data page
 	var p AllHostDataPage
 	mapped := transformResultsToMap(results)
 
-	//	for measurement, timestamp := range mapped {
-	//		log.Debug(measurement)
-	//		log.Debug(timestamp)
-	//		for metric, value := range timestamp {
-	//			log.Debug(metric, "=", value)
-	//		}
-	//	}
 	p.Queries = mapped
 
 	p.Host = vars["hostname"]
