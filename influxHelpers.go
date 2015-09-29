@@ -54,50 +54,45 @@ func getAllHostData(host string) ([]client.Result, error) {
 func transformResultsToMap(input []client.Result) (output map[string]map[string]interface{}) {
 	// Accepts client.Result and maps it into a usable data structure for our pages
 	log.Warn(input)
-
+	// Init a new map with hte make func to create a new output for our downstream data
 	output = make(map[string]map[string]interface{})
-
 	// There is only a single index [0] returned from influx
 	for _, v := range input {
 		// v.Series is the tablature data
 		for _, values := range v.Series {
 			// Create a new output key from the value of the tablature data
-
 			output[values.Name] = make(map[string]interface{})
-
 			// For each index and metric column, range over
 			for i, mc := range values.Columns {
-
+				// outMap is our map of timestamped values for our interface
+				outMap := make(map[string]interface{})
 				// For each metric index and metric values, range
 				for _, mv := range values.Values {
 					if mv[i] != nil {
 						// Time is always the first in the values array
 						timestamp := mv[0].(string)
-
-						log.Warn("COLUMN ", mc)
 						// Init a new map for the tablature name with a key for the metric
 						output[values.Name][mc] = make([]map[string]interface{}, len(mv))
-
-						//output[values.Name][mc].(map[string]interface{})[timestamp] = make([]map[string]string, len(mv))
-
-						//outArry := make([]map[string]interface{}, len(mv))
-
-						outMap := make(map[string]interface{})
-
-						log.Warn(timestamp, ": ", mv[i])
+						// Init a new array with length mv to dump our data to
+						outArry := make([]map[string]interface{}, len(mv))
+						// Debug output
+						log.Debug(timestamp, ": ", mv[i])
+						// Type assert our way into the mapped timestamp
 						switch mv[i].(type) {
 						case json.Number:
 							outMap[timestamp] = mv[i].(json.Number)
-
-							output[values.Name][mc].([]map[string]interface{}) = append(output[values.Name][mc].([]map[string]interface{}), outMap)
-
+							outArry = append(outArry, outMap)
 						case string:
-							output[values.Name][mc].(map[string]interface{})[timestamp] = mv[i].(string)
+							outMap[timestamp] = mv[i].(string)
+							outArry = append(outArry, outMap)
 						case uint8:
-							output[values.Name][mc].(map[string]interface{})[timestamp] = mv[i].(uint8)
+							outMap[timestamp] = mv[i].(uint8)
+							outArry = append(outArry, outMap)
 						}
 					}
 				}
+				// Append our timestamped values to the map
+				output[values.Name][mc] = outMap
 			}
 		}
 	}
