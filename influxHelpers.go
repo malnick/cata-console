@@ -41,7 +41,7 @@ func getAllHostData(host string) ([]client.Result, error) {
 	// Get the new client
 	influxClient := SetInflux()
 	// Cmd to query all data for host
-	cmd := fmt.Sprintf("select * from /.*/ where hostname = '%s' limit 3", host)
+	cmd := fmt.Sprintf("select * from /.*/ where hostname = '%s'", host)
 	allData, err := queryInfluxDb(influxClient, cmd, InfluxDb)
 	if err != nil {
 		return allData, err
@@ -89,17 +89,12 @@ func transformResultsToMap(input []client.Result) (output map[string]map[string]
 							outMap[timestamp] = mv[i].(uint8)
 							outArry = append(outArry, outMap)
 						}
+						// Append our timestamped values to the map
+						output[values.Name][mc] = outMap
+
 					}
 				}
-				// Append our timestamped values to the map
-				output[values.Name][mc] = outMap
 			}
-		}
-	}
-	for k, v := range output {
-		log.Warn(k)
-		for key, value := range v {
-			log.Warn(key, " ", value)
 		}
 	}
 	return output
