@@ -108,7 +108,9 @@ func influxify(data []*HttpPost) []client.Point {
 						cp.Measurement = metricName
 						// add the measurement to the metrickey with correct type assertion
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
-						cp.Fields[metrickey] = measurement.(float64)
+						// When not in scientific notation, truncate
+						truncatedMeasurement := float64(int(measurement.(float64)*100)) / 100
+						cp.Fields[metrickey] = truncatedMeasurement
 						// tag it with the hostname for easy query later
 						cp.Tags["hostname"] = "test"
 					case int:

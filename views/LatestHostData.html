@@ -11,26 +11,34 @@
     <div class="container">
       <div class="panel-heading">
         <div class="page-header">
-          <nav class="navbar navbar-inverse navbar-fixed-top">
-            <h1 class="navbar-text navbar-center">{{with .Host}}{{.}}{{end}}<small> Latest Data</sma  ll></h1>
-        </nav>
+          <nav class="navbar navbar-fixed-top">
+            <h1 class="navbar-text navbar-center">{{with .Host}}{{.}}{{end}}<small> Latest Data</small></h1>
+              <div class="navbar-header">
+              <button type="button" class="btn btn-default navbar-btn"><a href="/">Main</a></button>
+            </div>
+          </nav>
+        </div>
       </div>
     
-      <div class="panel-body">
       {{with .Data}}
       {{range $key, $value := .}}
-      <table class="table table-bordered">
-        <td>
-        <h3 class="text-capitalize">{{$key}} Data</h3>
+      <div class="panel panel-primary">
+        <div class="panel-heading"><h4 class="text-capitalize">{{$key}}</h4></div>
         {{range $k, $v := $value}}
-        <p>
-          <b>{{$k}}:</b> {{$v}}
-        </p>
+        <!-- Table -->
+        <table class="table table-hover">
+          <thread>
+            <tr>
+              <th align="left">{{$k}}</th>
+              {{range $timestamp, $metricvalue := $v}}
+              <td align="right">{{$metricvalue}}</td>
+              {{end}}
+            </tr>
+          </thread>
+        </table>
         {{end}}
-        </td>
-      </table>
+      </div>
       {{end}}
       {{end}}
-    </div>
-  </body>
+   </body>
 </html>
