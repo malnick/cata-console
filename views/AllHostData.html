@@ -20,11 +20,11 @@
        </div>
       </div>
       <div class="panel panel-primary">
-      {{with .Queries}}
-      {{range $measurement, $data := .}}
+      {{$hostname := .Host}}
+      {{range $measurement, $data := .Queries}}
       <table class="table table-bordered">
         <tr>
-          <th><h3 class="text-capitalize">{{$measurement}}<small> Data</small></h3></th>
+          <th><h3 class="text-capitalize"><a href="/host/{{$hostname}}/{{$measurement}}">{{$measurement}}</a><small> Data</small></h3></th>
         </tr>
         <td>
 
@@ -45,7 +45,6 @@
           {{end}}
         </td>
       </table>
-      {{end}}
       {{end}}
     </div>
   </body>
