@@ -12,25 +12,21 @@
       <div class="panel-heading">
         <div class="page-header">
           <nav class="navbar navbar-inverse navbar-fixed-top">
-            <h1 class="navbar-text navbar-center">{{with .Host}}{{.}}{{end}}<small> All Data</sma  ll></h1>
+            <h1 class="navbar-text navbar-center">{{with .Host}}{{.}}{{end}}<small> Configuration</sma  ll></h1>
         </nav>
-      </div> 
+      </div>
+    
       <div class="panel-body">
-      {{with .Queries}}
-      {{range $measurement, $data := .}}
+      {{with .Config}}
+      {{range $key, $value := .}}
       <table class="table table-bordered">
-        <tr>
-          <th><h3 class="text-capitalize">{{$measurement}}<small> Data</small></h3></th>
-        </tr>
         <td>
-          {{range $key, $values := $data}}
-          <h4 class="text-capitalize">{{$key}}</h4> 
-          <ul class="list-group">
-            {{range $time, $value := $values}}
-            <li class="list-group-item">{{$time}}: <b>{{$value}}</b></li>
-          </ul>
-          {{end}}
-          {{end}}
+        <h3 class="text-capitalize">{{$key}} Data</h3>
+        {{range $k, $v := $value}}
+        <p>
+          <b>{{$k}}:</b> {{$v}}
+        </p>
+        {{end}}
         </td>
       </table>
       {{end}}
