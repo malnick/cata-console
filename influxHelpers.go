@@ -9,6 +9,17 @@ import (
 	"github.com/influxdb/influxdb/client"
 )
 
+// Accepts a an array of results and returns a singlular line query
+func stringArrayResults(resultsArry []client.Result) []string {
+	var stringArry = []string{}
+	for _, v := range resultsArry {
+		for _, value := range v.Series[0].Values[0][1].([]interface{}) {
+			stringArry = append(stringArry, value.(string))
+		}
+	}
+	return stringArry
+}
+
 func getUniqueHosts() ([]string, error) {
 	var uniqueHosts = []string{}
 	log.Debug("Getting distinct hosts")
@@ -20,12 +31,8 @@ func getUniqueHosts() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	for _, v := range distinctHosts {
-		log.Debug("Hosts: ", v.Series[0].Values[0][1])
-		for _, host := range v.Series[0].Values[0][1].([]interface{}) {
-			uniqueHosts = append(uniqueHosts, host.(string))
-		}
-	}
+	// Get the output in []string format
+	uniqueHosts = stringArrayResults(distinctHosts)
 	// return the results
 	return uniqueHosts, nil
 }
