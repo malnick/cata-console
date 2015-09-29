@@ -17,14 +17,14 @@
       </div>
       <div class="panel-body">
       {{with .AvailableHosts}}
-      {{range $i, $host := .}}
+      {{range $host, $hits := .}}
       <table class="table table-bordered">
         <tr>
           <th><h3 class="text-capitalize">{{$host}}<small> Cata Agent</small></h3></th>
         </tr>
         <td>
           <ul class="nav nav-pills" role="tablist">
-            <li role="presentation"><a href="host/{{$host}}">All Data <span class="badge">hits</span></a></li>
+            <li role="presentation"><a href="host/{{$host}}">All Data <span class="badge">{{$hits}}</span></a></li>
             <li role="presentation"><a href="host/{{$host}}/latest">Latest Data</a></li>
             <li role="presentation"><a href="host/{{$host}}/alarms">Set Alarms</a></li>
             <li role="presentation" class="label label-danger"><a href="host/{{$host}}/alerts">Alerts <span class="badge">number</span></a></li>

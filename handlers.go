@@ -22,8 +22,7 @@ type LatestHostDataPage struct {
 }
 
 type MainPage struct {
-	AvailableHosts []string
-	HostHits       map[string]string
+	AvailableHosts map[string]string
 }
 
 type HttpPost struct {
@@ -77,13 +76,18 @@ func Console(w http.ResponseWriter, r *http.Request) {
 	log.Debug("/ GET")
 	// Get a local main page struct to dump our data to
 	var p MainPage
+	// Init a new map
+	p.AvailableHosts = make(map[string]string)
 	// Use a helper function to return all distinct hostnames from influx
-	results, err := getUniqueHosts()
+	uniqueHosts, err := getUniqueHosts()
 	// If things go wrong error but keep running
 	if err != nil {
 		log.Error(err)
 	}
-	p.AvailableHosts = results
+	// For each unique host, count the number of host entries
+	for _, host := range uniqueHosts {
+		p.AvailableHosts[host] = countHostEntries(host)
+	}
 	t, _ := template.ParseFiles("views/MainPage.html")
 	t.Execute(w, p)
 

@@ -13,8 +13,19 @@ import (
 func stringArrayResults(resultsArry []client.Result) []string {
 	var stringArry = []string{}
 	for _, v := range resultsArry {
-		for _, value := range v.Series[0].Values[0][1].([]interface{}) {
-			stringArry = append(stringArry, value.(string))
+		switch v.Series[0].Values[0][1].(type) {
+		case []interface{}:
+			for _, value := range v.Series[0].Values[0][1].([]interface{}) {
+				switch value.(type) {
+				case json.Number:
+					stringArry = append(stringArry, string(value.(json.Number)))
+				case string:
+					stringArry = append(stringArry, value.(string))
+				}
+			}
+		case json.Number:
+			value := v.Series[0].Values[0][1].(json.Number)
+			stringArry = append(stringArry, string(value))
 		}
 	}
 	return stringArry
@@ -65,15 +76,16 @@ func getAllHostData(host string) ([]client.Result, error) {
 }
 
 // Counts all entries a host has in the DB
-func countHostEntries(host string) ([]client.Result, error) {
+func countHostEntries(host string) string {
 	log.Debug("Counting host entries for ", host)
 	influxClient := SetInflux()
 	cmd := fmt.Sprintf("select count(hostname) from /.*/ where hostname = '%s'", host)
 	resp, err := queryInfluxDb(influxClient, cmd, InfluxDb)
 	if err != nil {
-		return resp, err
+		log.Error(err)
 	}
-	return resp, nil
+	respArry := stringArrayResults(resp)
+	return respArry[0]
 }
 
 // accepts []client.result and returns map[measurement][metric][]map[timestamp] = value
