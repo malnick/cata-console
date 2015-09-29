@@ -53,7 +53,7 @@ func getLatestHostData(host string) ([]client.Result, error) {
 	// Get a new client
 	influxClient := SetInflux()
 	// Create the cmd to get latest data for host
-	cmd := fmt.Sprintf("select * from /.*/ where hostname = '%s'", host)
+	cmd := fmt.Sprintf("select * from /.*/ where hostname = '%s' ORDER BY time DESC limit 1", host)
 	latestData, err := queryInfluxDb(influxClient, cmd, InfluxDb)
 	if err != nil {
 		return latestData, err
