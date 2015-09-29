@@ -175,6 +175,7 @@ func dumpToInflux(host string, data []*HttpPost) (response string, err error) {
 		Points:          influxify(data),
 		Database:        InfluxDb,
 		RetentionPolicy: "default",
+		Precision:       "s",
 	}
 	_, err = influxClient.Write(batchDump)
 	if err != nil {
