@@ -25,10 +25,10 @@
         </tr>
         <td>
           {{range $key, $values := $data}}
+          <h4 class="text-capitalize">{{$key}}</h4> 
           <ul class="list-group">
-            <h4 class="text-capitalize">{{$key}}</h4>        
             {{range $time, $value := $values}}
-            <li class="list-group-item">{{$time}}: {{$value}}</li>
+            <li class="list-group-item">{{$time}}: <b>{{$value}}</b></li>
           </ul>
           {{end}}
           {{end}}
