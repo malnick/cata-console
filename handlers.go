@@ -132,3 +132,26 @@ func ConsoleHostnameRoot(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("views/AllHostData.html")
 	t.Execute(w, p)
 }
+
+func ConsoleHostnameRootMeasurement(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	// Get hostname from passed URL
+	hostname := vars["hostname"]
+	// Get measurement from passed URL
+	measurement := vars["measurement"]
+
+	results, err := getAllHostDataMeasure(hostname, measurement)
+	if err != nil {
+		log.Error(err)
+	}
+	var p AllHostDataPage
+	mapped := transformResultsToMap(results)
+
+	p.Queries = mapped
+
+	p.Host = vars["hostname"]
+
+	// Parse Template
+	t, _ := template.ParseFiles("views/AllHostData.html")
+	t.Execute(w, p)
+}

@@ -75,6 +75,20 @@ func getAllHostData(host string) ([]client.Result, error) {
 	return allData, nil
 }
 
+func getAllHostDataMeasure(host string, measurement string) ([]client.Result, error) {
+	log.Debug("Getting all host data for ", host)
+	// Get the new client
+	influxClient := SetInflux()
+	// Cmd to query all data for host
+	cmd := fmt.Sprintf("select * from %s where hostname = '%s'", measurement, host)
+	allData, err := queryInfluxDb(influxClient, cmd, InfluxDb)
+	if err != nil {
+		return allData, err
+	}
+
+	return allData, nil
+}
+
 // Counts all entries a host has in the DB
 func countHostEntries(host string) string {
 	log.Debug("Counting host entries for ", host)

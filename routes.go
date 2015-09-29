@@ -37,4 +37,10 @@ var routes = Routes{
 		"/host/{hostname}",
 		ConsoleHostnameRoot,
 	},
+	Route{
+		"HostnameRootMeasurement",
+		"GET",
+		"/host/{hostname}/{measurement}",
+		ConsoleHostnameRootMeasurement,
+	},
 }
