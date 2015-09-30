@@ -4,6 +4,7 @@ package main
 
 import "github.com/influxdb/influxdb/client"
 import (
+	"crypto/sha1"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"net/url"
@@ -72,10 +73,21 @@ func CheckDb(con *client.Client, db string) error {
 	return nil
 }
 
+// Accepts a timestamp and returns the SHA1 string for use as a tag
+func newShaStamp(t time.Time) string {
+	stringThis := fmt.Sprintf("%s", t)
+	hash := sha1.New()
+	hash.Write([]byte(stringThis))
+	return fmt.Sprintf("%x", hash.Sum(nil))
+}
+
 // Accepts HTTP POST data and turns it into line protocol format
 func influxify(data []*HttpPost) []client.Point {
 	// Define our client point array
 	var cpArry []client.Point
+	// Get a sync timestamp
+	timestamp := time.Now()
+	shastamp := newShaStamp(timestamp)
 	// For each post in posts, dump the json to line protocol format
 	for key, values := range data {
 		log.Debug("Influxifying data for ", values.Host)
@@ -103,43 +115,51 @@ func influxify(data []*HttpPost) []client.Point {
 					case float64:
 						// Same for each block
 						// Add timestamp
-						cp.Time = time.Now()
+						cp.Time = timestamp
 						// add the measurement
 						cp.Measurement = metricName
 						// add the measurement to the metrickey with correct type assertion
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						// When not in scientific notation, truncate
-						truncatedMeasurement := float64(int(measurement.(float64)*100)) / 100
-						cp.Fields[metrickey] = truncatedMeasurement
+						cp.Fields[metrickey] = measurement.(float64)
 						// tag it with the hostname for easy query later
-						cp.Tags["hostname"] = "test"
+						cp.Tags["hostname"] = values.Host
+						cp.Tags["sha1"] = shastamp
 					case int:
-						cp.Time = time.Now()
+						cp.Time = timestamp
 						cp.Measurement = metricName
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(int)
 						cp.Tags["hostname"] = values.Host
+						cp.Tags["sha1"] = shastamp
 					case string:
-						cp.Time = time.Now()
+						cp.Time = timestamp
 						cp.Measurement = metricName
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(string)
 						cp.Tags["hostname"] = values.Host
+						cp.Tags["sha1"] = shastamp
 					case int64:
-						cp.Time = time.Now()
+						cp.Time = timestamp
+						cp.Measurement = metricName
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(int64)
 						cp.Tags["hostname"] = values.Host
+						cp.Tags["sha1"] = shastamp
 					case uint:
-						cp.Time = time.Now()
+						cp.Time = timestamp
+						cp.Measurement = metricName
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(uint)
 						cp.Tags["hostname"] = values.Host
+						cp.Tags["sha1"] = shastamp
 					case uint64:
-						cp.Time = time.Now()
+						cp.Time = timestamp
+						cp.Measurement = metricName
 						log.Debug(fmt.Sprintf("%s: %s", metrickey, measurement))
 						cp.Fields[metrickey] = measurement.(uint64)
 						cp.Tags["hostname"] = values.Host
+						cp.Tags["sha1"] = shastamp
 					}
 				}
 			default:
@@ -155,7 +175,7 @@ func influxify(data []*HttpPost) []client.Point {
 			cpArry = append(cpArry, cp)
 		}
 	}
-	log.Debug(cpArry)
+	log.Debug("Full Dump: ", cpArry)
 	return cpArry
 }
 
@@ -175,7 +195,7 @@ func dumpToInflux(host string, data []*HttpPost) (response string, err error) {
 		Points:          influxify(data),
 		Database:        InfluxDb,
 		RetentionPolicy: "default",
-		Precision:       "s",
+		//Precision:       "s",
 	}
 	_, err = influxClient.Write(batchDump)
 	if err != nil {
