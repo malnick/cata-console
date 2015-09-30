@@ -43,10 +43,10 @@ var routes = Routes{
 		"/host/{hostname}/{measurement}",
 		ConsoleHostnameRootMeasurement,
 	},
-	//	Route{
-	//		"HostnameRootMeasurementTimevalue",
-	//		"GET",
-	//		"/host/{hostname}/{measurement}/{timstamp}",
-	//		ConsoleHostnameRootMeasurementTimevalue,
-	//	},
+	Route{
+		"HostnameRootMeasurementTimevalue",
+		"GET",
+		"/host/{hostname}/{measurement}/{shastamp}",
+		ConsoleHostnameRootMeasurementTimevalue,
+	},
 }
