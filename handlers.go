@@ -163,9 +163,9 @@ func ConsoleHostnameRootMeasurementTimevalue(w http.ResponseWriter, r *http.Requ
 	// Get measurement from passed URL
 	measurement := vars["measurement"]
 	// Get sanitized time
-	shastamp := vars["shastamp"]
+	timestamp := vars["timestamp"]
 
-	results, err := getTimevalueHostDataMeasure(hostname, measurement, shastamp)
+	results, err := getTimevalueHostDataMeasure(hostname, measurement, timestamp)
 	if err != nil {
 		log.Error(err)
 	}
@@ -177,6 +177,6 @@ func ConsoleHostnameRootMeasurementTimevalue(w http.ResponseWriter, r *http.Requ
 	p.Host = vars["hostname"]
 
 	// Parse Template
-	t, _ := template.ParseFiles("views/AllHostData.html")
+	t, _ := template.ParseFiles("views/MeasurementByTimeHostData.html")
 	t.Execute(w, p)
 }

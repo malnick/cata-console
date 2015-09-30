@@ -12,7 +12,7 @@
       <div class="panel-heading">
         <div class="page-header">
          <nav class="navbar navbar-fixed-top">
-           <h1 class="navbar-text navbar-center">{{with .Host}}{{.}}{{end}}<small> All Data</small></h1>
+           <h1 class="navbar-text navbar-center">{{with .Host}}{{.}}{{end}}<small> Data</small></h1>
              <div class="navbar-header">
              <button type="button" class="btn btn-default navbar-btn"><a href="/">Main</a></button>
            </div>
@@ -22,29 +22,18 @@
       <div class="panel panel-primary">
       {{$hostname := .Host}}
       {{range $measurement, $data := .Queries}}
+      {{range $metric, $values := $data}}
       <table class="table table-bordered">
         <tr>
-          <th><h3 class="text-capitalize"><a href="/host/{{$hostname}}/{{$measurement}}">{{$measurement}}</a><small> Data</small></h3></th>
+          <th><h3 class="text-capitalize"><a href="/host/{{$hostname}}/{{$measurement}}">{{$metric}}</a></h3></th>
         </tr>
-        <td>
-
-          {{range $key, $values := $data}}
-          <div class="btn-group" role="group" >
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                {{$key}}
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                {{range $time, $value := $values}}
-                <li><a href="/host/{{$hostname}}/{{$measurement}}/{{$time}}">{{$time}}</a></li>
-                {{end}}
-              </ul>
-            </div>
-          </div>
-          {{end}}
-        </td>
+        {{range $timestamp, $metricvalue := $values}}
+        <tr>
+          <td><h4>{{$metricvalue}}</h4></td>
+        </tr>
+        {{end}}
       </table>
+      {{end}}
       {{end}}
     </div>
   </body>

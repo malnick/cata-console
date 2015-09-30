@@ -90,11 +90,11 @@ func getAllHostDataMeasure(host string, measurement string) ([]client.Result, er
 }
 
 // Get data by sha1 to convert to timed data
-func getTimevalueHostDataMeasure(host string, measurement string, shastamp string) ([]client.Result, error) {
+func getTimevalueHostDataMeasure(host string, measurement string, timestamp string) ([]client.Result, error) {
 	// Get the new client
 	influxClient := SetInflux()
 	// Cmd to query all data for host
-	cmd := fmt.Sprintf("select * from %s where hostname = '%s' and sha1 = '%s'", measurement, host, shastamp)
+	cmd := fmt.Sprintf("select * from %s where hostname = '%s' and time = '%s'", measurement, host, timestamp)
 	allData, err := queryInfluxDb(influxClient, cmd, InfluxDb)
 	if err != nil {
 		return allData, err
