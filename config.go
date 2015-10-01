@@ -17,13 +17,23 @@ type Alarm struct {
 }
 
 type Config struct {
-	LogLevel string  `json:"log_level"`
-	Alarms   []Alarm `json:"alarms"`
+	LogLevel   string  `json:"log_level"`
+	Alarms     []Alarm `json:"alarms"`
+	GrafanaUrl string  `json:"grafana_url"`
 }
+
+const (
+	DefaultGrafanaUrl = "localhost:3000"
+)
 
 func ParseEnv(c Config) Config {
 	// Create a few matches for our env parsing down the road
 	matchEnv, _ := regexp.Compile("CATA_ALARM_*")
+	// Get the Grafana Console URL from ENV or set default
+	matchGrafanaUrl, _ := regexp.Compile("CATA_GRAFANA_URL=*")
+	// Set the defaults and override later
+	c.GrafanaUrl = DefaultGrafanaUrl
+
 	// Parse the env for our config
 	for _, e := range os.Environ() {
 		if matchEnv.MatchString(e) {
@@ -39,7 +49,13 @@ func ParseEnv(c Config) Config {
 			newAlarm.Ok = ok
 			c.Alarms = append(c.Alarms, newAlarm)
 		}
+		if matchGrafanaUrl.MatchString(e) {
+			newGrafanaUrl := strings.Split(e, "=")[1]
+			c.GrafanaUrl = newGrafanaUrl
+		}
 	}
+	// Plug the config into stdout so we have a record
+	log.Info("Grafana URL: ", c.GrafanaUrl)
 	// Get the consoles from the env
 	return c
 }
