@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"io/ioutil"
@@ -18,6 +17,7 @@ type HostDashboard struct {
 // Accepts the Hostname and creates a new dashboard for the host in ./hostdata/templates/$hostname
 func createHostDashboard(hostname string) {
 	makeDirectories(hostname)
+	hostJsonFile := fmt.Sprintf("hostdata/templates/%s_dashbaord.json", hostname)
 	// Init a new dashboard obj
 	var hostdash HostDashboard
 	// Update the hostname
@@ -28,7 +28,6 @@ func createHostDashboard(hostname string) {
 		log.Error(err)
 	}
 	// Get a new file handle
-	hostJsonFile := fmt.Sprintf("hostdata/templates/%s_dashbaord.json")
 	f, err := os.Create(fmt.Sprintf(hostJsonFile, hostname))
 	if err != nil {
 		log.Error(err)
@@ -43,11 +42,12 @@ func createHostDashboard(hostname string) {
 
 func updateHostDashboard(hostJsonFile string) {
 	c := ParseConfig()
-	url := c.GrafanaUrl
+	url := fmt.Sprintf("http://%s/api/dashboards/db", c.GrafanaUrl)
 	jsonFile, err := ioutil.ReadFile(hostJsonFile)
 	if err != nil {
 		log.Error(err)
 	}
+	log.Info("Updating Grafana Dashboard: ", url)
 	// POST our data to grafana
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonFile))
 	if err != nil {

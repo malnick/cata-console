@@ -17,22 +17,28 @@ type Alarm struct {
 }
 
 type Config struct {
-	LogLevel   string  `json:"log_level"`
-	Alarms     []Alarm `json:"alarms"`
-	GrafanaUrl string  `json:"grafana_url"`
+	LogLevel    string  `json:"log_level"`
+	Alarms      []Alarm `json:"alarms"`
+	GrafanaUrl  string  `json:"grafana_url"`
+	GrafanaAuth string  `json:"grafana_auth"`
 }
 
 const (
-	DefaultGrafanaUrl = "localhost:3000"
+	DefaultGrafanaUrl  = "localhost:3000"
+	DefaultGrafanaAuth = "CATA_GRAFANA_AUTH Not Set!"
 )
 
 func ParseEnv(c Config) Config {
 	// Create a few matches for our env parsing down the road
-	matchEnv, _ := regexp.Compile("CATA_ALARM_*")
+	matchEnv, _ := regexp.Compile("KATA_ALARM_*")
 	// Get the Grafana Console URL from ENV or set default
-	matchGrafanaUrl, _ := regexp.Compile("CATA_GRAFANA_URL=*")
+	matchGrafanaUrl, _ := regexp.Compile("KATA_GRAFANA_URL=*")
+	// Get the auth bearer for grafana api
+	matchGrafanaAuth, _ := regexp.Compile("KATA_GRAFANA_AUTH=*")
+
 	// Set the defaults and override later
 	c.GrafanaUrl = DefaultGrafanaUrl
+	c.GrafanaAuth = DefaultGrafanaAuth
 
 	// Parse the env for our config
 	for _, e := range os.Environ() {
@@ -53,9 +59,14 @@ func ParseEnv(c Config) Config {
 			newGrafanaUrl := strings.Split(e, "=")[1]
 			c.GrafanaUrl = newGrafanaUrl
 		}
+		if matchGrafanaAuth.MatchString(e) {
+			grafanaAuth := strings.Split(e, "=")[1]
+			c.GrafanaAuth = grafanaAuth
+		}
 	}
 	// Plug the config into stdout so we have a record
 	log.Info("Grafana URL: ", c.GrafanaUrl)
+	log.Info("Grafana Auth: ", c.GrafanaAuth)
 	// Get the consoles from the env
 	return c
 }
