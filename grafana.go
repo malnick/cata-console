@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"text/template"
@@ -26,7 +28,8 @@ func createHostDashboard(hostname string) {
 		log.Error(err)
 	}
 	// Get a new file handle
-	f, err := os.Create(fmt.Sprintf("hostdata/templates/%s_dashbaord.json", hostname))
+	hostJsonFile := fmt.Sprintf("hostdata/templates/%s_dashbaord.json")
+	f, err := os.Create(fmt.Sprintf(hostJsonFile, hostname))
 	if err != nil {
 		log.Error(err)
 	}
@@ -35,10 +38,30 @@ func createHostDashboard(hostname string) {
 	if err != nil {
 		log.Error(err)
 	}
+	updateHostDashboard(hostJsonFile)
 }
 
-func updateHostDashboard() {
-
+func updateHostDashboard(hostJsonFile string) {
+	c := ParseConfig()
+	url := c.GrafanaUrl
+	jsonFile, err := ioutil.ReadFile(hostJsonFile)
+	if err != nil {
+		log.Error(err)
+	}
+	// POST our data to grafana
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonFile))
+	if err != nil {
+		log.Error(err)
+	}
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Error(err)
+	}
+	defer resp.Body.Close()
+	log.Info("POST to Grafana: ")
+	fmt.Println(string(jsonFile))
+	log.Info("Response: ", resp.Status)
 }
 
 // Ensures we have a templates dir for this hostname
