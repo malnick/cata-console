@@ -20,25 +20,10 @@
         </div>
       </div>
     
-      {{with .Data}}
-      {{range $key, $value := .}}
       <div class="panel panel-primary">
-        <div class="panel-heading"><h4 class="text-capitalize">{{$key}}</h4></div>
-        {{range $k, $v := $value}}
-        <!-- Table -->
-        <table class="table table-hover">
-          <thread>
-            <tr>
-              <th align="left">{{$k}}</th>
-              {{range $timestamp, $metricvalue := $v}}
-              <td align="right">{{$metricvalue}}</td>
-              {{end}}
-            </tr>
-          </thread>
-        </table>
-        {{end}}
+        <div class="panel-heading"><h4 class="text-capitalize">Last Hour</h4></div>
       </div>
-      {{end}}
-      {{end}}
+      <iframe src="http://localhost:3000/dashboard-solo/db/bohr-2-local?panelId=2&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
+      <iframe src="http://localhost:3000/dashboard-solo/db/bohr-2-local?panelId=1&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
    </body>
 </html>
