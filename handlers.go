@@ -96,6 +96,8 @@ func Console(w http.ResponseWriter, r *http.Request) {
 func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	hostname := vars["hostname"]
+	// Create grafana dashboard for our hostname
+	createHostDashboard(hostname)
 
 	// Get a local Latest Host Data strcut and init a new map for the
 	var p LatestHostDataPage

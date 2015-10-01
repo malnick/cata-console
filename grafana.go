@@ -25,7 +25,13 @@ func createHostDashboard(hostname string) {
 	if err != nil {
 		log.Error(err)
 	}
-	err = t.Execute(os.Stdout, hostdash)
+	// Get a new file handle
+	f, err := os.Create(fmt.Sprintf("hostdata/templates/%s_dashbaord.json", hostname))
+	if err != nil {
+		log.Error(err)
+	}
+	//Execute our template
+	err = t.Execute(f, hostdash)
 	if err != nil {
 		log.Error(err)
 	}

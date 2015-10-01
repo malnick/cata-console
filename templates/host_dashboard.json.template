@@ -1,7 +1,8 @@
+{{with .Hostname}}
 {
   "id": 1,
-  "title": "{{$hostname}}",
-  "originalTitle": "{{$hostname}}",
+  "title": "{{.}}",
+  "originalTitle": "{{.}}",
   "tags": [],
   "style": "dark",
   "timezone": "browser",
@@ -74,20 +75,20 @@
                 }
               ],
               "measurement": "memory",
-              "query": "SELECT max(\"used_percent\") AS \"used_percent\" FROM \"memory\" WHERE \"hostname\" = '{{$hostname}}' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT max(\"used_percent\") AS \"used_percent\" FROM \"memory\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)",
               "refId": "A",
               "tags": [
                 {
                   "key": "hostname",
                   "operator": "=",
-                  "value": "{{$hostname}}"
+                  "value": "{{.}}"
                 }
               ]
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "{{$hostname}} Memory Usage by Percent",
+          "title": "{{.}} Memory Usage by Percent",
           "tooltip": {
             "shared": true,
             "value_type": "cumulative"
@@ -165,20 +166,20 @@
                 }
               ],
               "measurement": "load",
-              "query": "SELECT max(\"load1\") AS \"load1\" FROM \"load\" WHERE \"hostname\" = '{{$hostname}}' AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT max(\"load1\") AS \"load1\" FROM \"load\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)",
               "refId": "A",
               "tags": [
                 {
                   "key": "hostname",
                   "operator": "=",
-                  "value": "{{$hostname}}"
+                  "value": "{{.}}"
                 }
               ]
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "{{$hostname}} 1 Minute Load",
+          "title": "{{.}} 1 Minute Load",
           "tooltip": {
             "shared": true,
             "value_type": "cumulative"
@@ -201,7 +202,7 @@
       "collapse": false,
       "panels": [
         {
-          "title": "{{$hostname}} 5min Load",
+          "title": "{{.}} 5min Load",
           "error": false,
           "span": 12,
           "editable": true,
@@ -259,7 +260,7 @@
                 {
                   "key": "hostname",
                   "operator": "=",
-                  "value": "{{$hostname}}"
+                  "value": "{{.}}"
                 }
               ],
               "groupBy": [
@@ -275,7 +276,7 @@
                 }
               ],
               "measurement": "load",
-              "query": "SELECT max(\"load5\") AS \"load5\" FROM \"load\" WHERE \"hostname\" = '{{$hostname}}' AND $timeFilter GROUP BY time($interval)"
+              "query": "SELECT max(\"load5\") AS \"load5\" FROM \"load\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
             }
           ],
           "aliasColors": {},
@@ -291,7 +292,7 @@
       "collapse": false,
       "panels": [
         {
-          "title": "{{$hostname}} 15min Load",
+          "title": "{{.}} 15min Load",
           "error": false,
           "span": 12,
           "editable": true,
@@ -349,7 +350,7 @@
                 {
                   "key": "hostname",
                   "operator": "=",
-                  "value": "{{$hostname}}"
+                  "value": "{{.}}"
                 }
               ],
               "groupBy": [
@@ -365,7 +366,7 @@
                 }
               ],
               "measurement": "load",
-              "query": "SELECT max(\"load15\") AS \"load15\" FROM \"load\" WHERE \"hostname\" = '{{$hostname}}' AND $timeFilter GROUP BY time($interval)"
+              "query": "SELECT max(\"load15\") AS \"load15\" FROM \"load\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
             }
           ],
           "aliasColors": {},
@@ -381,7 +382,7 @@
       "collapse": false,
       "panels": [
         {
-          "title": "{{$hostname}} Available Memory",
+          "title": "{{.}} Available Memory",
           "error": false,
           "span": 12,
           "editable": true,
@@ -471,7 +472,7 @@
       "collapse": false,
       "panels": [
         {
-          "title": "{{$hostname}} Free/Available/Total Memory",
+          "title": "{{.}} Free/Available/Total Memory",
           "error": false,
           "span": 12,
           "editable": true,
@@ -529,7 +530,7 @@
                 {
                   "key": "hostname",
                   "operator": "=",
-                  "value": "{{$hostname}}"
+                  "value": "{{.}}"
                 }
               ],
               "groupBy": [
@@ -545,7 +546,7 @@
                 }
               ],
               "measurement": "memory",
-              "query": "SELECT max(\"free\") AS \"free\" FROM \"memory\" WHERE \"hostname\" = '{{$hostname}}' AND $timeFilter GROUP BY time($interval)"
+              "query": "SELECT max(\"free\") AS \"free\" FROM \"memory\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
             },
             {
               "refId": "B",
@@ -553,7 +554,7 @@
                 {
                   "key": "hostname",
                   "operator": "=",
-                  "value": "{{$hostname}}"
+                  "value": "{{.}}"
                 }
               ],
               "groupBy": [
@@ -569,7 +570,7 @@
                 }
               ],
               "measurement": "memory",
-              "query": "SELECT max(\"available\") AS \"available\" FROM \"memory\" WHERE \"hostname\" = '{{$hostname}}' AND $timeFilter GROUP BY time($interval)"
+              "query": "SELECT max(\"available\") AS \"available\" FROM \"memory\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
             },
             {
               "refId": "C",
@@ -577,7 +578,7 @@
                 {
                   "key": "hostname",
                   "operator": "=",
-                  "value": "{{$hostname}}"
+                  "value": "{{.}}"
                 }
               ],
               "groupBy": [
@@ -593,7 +594,7 @@
                 }
               ],
               "measurement": "memory",
-              "query": "SELECT max(\"total\") AS \"total\" FROM \"memory\" WHERE \"hostname\" = '{{$hostname}}' AND $timeFilter GROUP BY time($interval)"
+              "query": "SELECT max(\"total\") AS \"total\" FROM \"memory\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
             }
           ],
           "aliasColors": {},
@@ -648,3 +649,4 @@
     }
   ]
 }
+{{end}}
