@@ -32,10 +32,11 @@ func createHostDashboard(hostname string) {
 			log.Error(err)
 		}
 		// Get a new file handle
-		f, err := os.Create(fmt.Sprintf(hostJsonFile, hostname))
+		f, err := os.Create(hostJsonFile)
 		if err != nil {
 			log.Error(err)
 		}
+		defer f.Close()
 		//Execute our template
 		err = t.Execute(f, hostdash)
 		if err != nil {

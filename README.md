@@ -35,3 +35,12 @@ You'll see some info output and it'll connect to a console on localhost:9000 by 
 1. Both agent and console support -v for verbose output. Running in this mode is important since most useful debugging output occurs there. 
 1. Agent also supports -p so you can switch the port it runs on at runtime. 
 1. Always check config.go in both apps to see the latest env var config options
+
+## Grafana Integration
+Currently only suppots limited grafana integration. Future work would make it so end-user only runs grafana then executes teh console with the correct API key for grafana and other config like influx URL so console configures grafana for you.
+
+1. Currently Kata will dynamically generate the JSON templates to create dashboards that it needs per host. It then dynamically generates the 'latest' page which has the expected URI to the iframe of the graph.
+1. TODO
+  1. Dynamic grafana configuration
+    1. Add InfluxDB datasource from ENV var: KATA_INFLUXDB_URL=localhost:8086
+  1. 
