@@ -1,6 +1,6 @@
 {{with .Hostname}}
 {
-  "id": 1,
+  "id": null,
   "title": "{{.}}",
   "originalTitle": "{{.}}",
   "tags": [],
@@ -36,7 +36,7 @@
             "threshold2Color": "rgba(234, 112, 112, 0.22)",
             "thresholdLine": false
           },
-          "id": 1,
+          "id": null,
           "legend": {
             "alignAsTable": false,
             "avg": true,

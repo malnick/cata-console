@@ -17,27 +17,32 @@ type HostDashboard struct {
 // Accepts the Hostname and creates a new dashboard for the host in ./hostdata/templates/$hostname
 func createHostDashboard(hostname string) {
 	makeDirectories(hostname)
+	// Get our host data file path
 	hostJsonFile := fmt.Sprintf("hostdata/templates/%s_dashbaord.json", hostname)
-	// Init a new dashboard obj
-	var hostdash HostDashboard
-	// Update the hostname
-	hostdash.Hostname = hostname
-	// Parse a new json template and save it
-	t, err := template.ParseFiles("templates/host_dashboard.json.template")
-	if err != nil {
-		log.Error(err)
+	// If the host data file exists, don't do anything - else, create it and post to grafana
+	if _, err := os.Stat(hostJsonFile); os.IsNotExist(err) {
+		log.Info(hostJsonFile, " not found. Creating and executing new dashboard from template.")
+		// Init a new dashboard obj
+		var hostdash HostDashboard
+		// Update the hostname
+		hostdash.Hostname = hostname
+		// Parse a new json template and save it
+		t, err := template.ParseFiles("templates/host_dashboard.json.template")
+		if err != nil {
+			log.Error(err)
+		}
+		// Get a new file handle
+		f, err := os.Create(fmt.Sprintf(hostJsonFile, hostname))
+		if err != nil {
+			log.Error(err)
+		}
+		//Execute our template
+		err = t.Execute(f, hostdash)
+		if err != nil {
+			log.Error(err)
+		}
+		updateHostDashboard(hostJsonFile)
 	}
-	// Get a new file handle
-	f, err := os.Create(fmt.Sprintf(hostJsonFile, hostname))
-	if err != nil {
-		log.Error(err)
-	}
-	//Execute our template
-	err = t.Execute(f, hostdash)
-	if err != nil {
-		log.Error(err)
-	}
-	updateHostDashboard(hostJsonFile)
 }
 
 func updateHostDashboard(hostJsonFile string) {
@@ -50,6 +55,10 @@ func updateHostDashboard(hostJsonFile string) {
 	log.Info("Updating Grafana Dashboard: ", url)
 	// POST our data to grafana
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonFile))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.GrafanaAuth))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
+	log.Info("Request Headers: ", req.Header)
 	if err != nil {
 		log.Error(err)
 	}
@@ -59,14 +68,16 @@ func updateHostDashboard(hostJsonFile string) {
 		log.Error(err)
 	}
 	defer resp.Body.Close()
-	log.Info("POST to Grafana: ")
-	fmt.Println(string(jsonFile))
+	log.Debug("POST to Grafana: ")
+	log.Debug(string(jsonFile))
 	log.Info("Response: ", resp.Status)
+	body, _ := ioutil.ReadAll(resp.Body)
+	log.Info("Response Body: ", string(body))
 }
 
 // Ensures we have a templates dir for this hostname
 func makeDirectories(hostname string) {
-	err := os.MkdirAll(fmt.Sprintf("hostdata/templates/%s", hostname), 0755)
+	err := os.MkdirAll("hostdata/templates", 0755)
 	if err != nil {
 		log.Error(err)
 	}
