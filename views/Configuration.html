@@ -12,18 +12,50 @@
     <div class="container">
       <div class="panel-heading">
         <div class="page-header">
-          <nav class="navbar navbar-header navbar-fixed-top">
-            <h1 class="navbar-text navbar-center">Kata Console<small> Configuration</small><h1>
-            <div class="navbar-header">
-              <button type="button" class="btn btn-default navbar-btn"><a href="/">Back to Main</a></button>
+           <nav class="navbar">
+             <div class="navbar-inner">
+               <a class="brand" href="/"><h1> Kata Console <small> Configuration</small></h1></a>
+               <ul class="nav">
+                 <li><a href="/">Back to Main</a></li>
+               </ul>
             </div>
           </nav>
         </div>
-      </div>
+      </div> 
       <div class="panel-body">
       <table class="table table-bordered">
         <tr>
           <th>Log Level</th><td>{{.LogLevel}}</td>
+        </tr>
+        <tr>
+          <th>Kata Home</th><td>{{.KataHome}}</td>
+        </tr>
+        <tr>
+          <th>Grafana URL</th><td>{{.GrafanaUrl}}</td>
+        </tr>
+        <tr>
+          <th>Grafana API Key</th><td>{{.GrafanaAuth}}</td>
+        </tr>
+        <tr>
+          <th>Influx URL</th><td>{{.InfluxUrl}}</td>
+        </tr>
+        <tr>
+          <th>Influx Port</th><td>{{.InfluxPort}}</td>
+        </tr>
+        <tr>
+          <th>Influx User</th><td>{{.InfluxUser}}</td>
+        </tr>
+        <tr>
+          <th>Influx Password</th><td>{{.InfluxPassword}}</td>
+        </tr>
+        <tr>
+          <th>Influx Basic Auth Enabled</th><td>{{.InfluxBasicAuthEnabled}}</td>
+        </tr>
+        <tr>
+          <th>Influx Basic Auth User</th><td>{{.InfluxBasicAuthUser}}</td>
+        </tr>
+        <tr>
+          <th>Influx Basic Auth Password</th><td>{{.InfluxBasicAuthPassword}}</td>
         </tr>
       </table>
     </div>
