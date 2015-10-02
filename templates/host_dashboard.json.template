@@ -1,7 +1,7 @@
 {{with .Hostname}}
 {
   "dashboard": {
-    "id": null,
+    "id": 1,
     "title": "{{.}}",
     "originalTitle": "{{.}}",
     "tags": [],
@@ -37,7 +37,7 @@
               "threshold2Color": "rgba(234, 112, 112, 0.22)",
               "thresholdLine": false
             },
-            "id": null,
+            "id": 1,
             "legend": {
               "alignAsTable": false,
               "avg": true,
@@ -650,6 +650,6 @@
       }
     ]
   },
-  "overwrite": false
+  "overwrite": true 
 }
 {{end}}

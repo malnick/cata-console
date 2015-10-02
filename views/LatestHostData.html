@@ -24,8 +24,11 @@
         <div class="panel-heading"><h4 class="text-capitalize">Last Hour</h4></div>
       </div>
       {{with .DashedHost}}
-      <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=2&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
       <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=1&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
+      <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=2&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
+      <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=3&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
+      <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=4&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
+      <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=5&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
       {{end}}
    </body>
 </html>
