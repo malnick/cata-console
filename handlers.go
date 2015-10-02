@@ -17,8 +17,9 @@ type AllHostDataPage struct {
 }
 
 type LatestHostDataPage struct {
-	Data map[string]map[string]interface{}
-	Host string
+	Data       map[string]map[string]interface{}
+	Host       string
+	DashedHost string
 }
 
 type MainPage struct {
