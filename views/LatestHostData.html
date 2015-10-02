@@ -12,7 +12,7 @@
       <div class="panel-heading">
         <div class="page-header">
           <nav class="navbar navbar-fixed-top">
-            <h1 class="navbar-text navbar-center">{{with .Host}}{{.}}{{end}}<small> Latest Data</small></h1>
+            <h1 class="navbar-text navbar-center">{{with .Host}}{{.}}{{end}}<small> Latest Data : From 15 Minutes Ago</small></h1>
               <div class="navbar-header">
               <button type="button" class="btn btn-default navbar-btn"><a href="/">Main</a></button>
             </div>
@@ -21,14 +21,30 @@
       </div>
     
       <div class="panel panel-primary">
-        <div class="panel-heading"><h4 class="text-capitalize">Last Hour</h4></div>
+        <div class="panel-heading"><h4 class="text-capitalize">Last 15 Minutes</h4></div>
       </div>
+
       {{with .DashedHost}}
-      <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=1&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
-      <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=2&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
-      <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=3&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
-      <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=4&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
-      <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=5&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <div class="span1">
+          </div>
+          <div class="span10">
+            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=1&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
+
+            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=2&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
+
+            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=3&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
+
+            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=4&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
+
+            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=5&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
+
+            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=6&fullscreen&from=now-1h&to=now" width="500" height="250" frameborder="0"></iframe>
+          </div>
+        </div>  
+      </div>
       {{end}}
-   </body>
+    </div>  
+  </body>
 </html>
