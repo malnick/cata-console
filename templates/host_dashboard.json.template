@@ -1,6 +1,6 @@
 {{with .Hostname}}
 {
-  "dashboard" {
+  "dashboard": {
     "id": null,
     "title": "{{.}}",
     "originalTitle": "{{.}}",

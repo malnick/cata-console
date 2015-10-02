@@ -64,7 +64,7 @@ func ParseEnv(c Config) Config {
 		}
 		if matchGrafanaAuth.MatchString(e) {
 			grafanaAuth := strings.Split(e, "=")[1]
-			c.GrafanaAuth = grafanaAuth
+			c.GrafanaAuth = fmt.Sprintf("%s==", grafanaAuth)
 		}
 		if matchKataHome.MatchString(e) {
 			newKataHome := strings.Split(e, "=")[1]
@@ -72,9 +72,9 @@ func ParseEnv(c Config) Config {
 		}
 	}
 	// Plug the config into stdout so we have a record
-	log.Info("Grafana URL: ", c.GrafanaUrl)
-	log.Info("Grafana Auth: ", c.GrafanaAuth)
-	log.Info("Kata Home: ", c.KataHome)
+	log.Debug("Grafana URL: ", c.GrafanaUrl)
+	log.Debug("Grafana Auth: ", c.GrafanaAuth)
+	log.Debug("Kata Home: ", c.KataHome)
 	checkhome(c.KataHome)
 	// Get the consoles from the env
 	return c
