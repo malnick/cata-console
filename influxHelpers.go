@@ -119,7 +119,6 @@ func countHostEntries(host string) string {
 // accepts []client.result and returns map[measurement][metric][]map[timestamp] = value
 func transformResultsToMap(input []client.Result) (output map[string]map[string]interface{}) {
 	// Accepts client.Result and maps it into a usable data structure for our pages
-	log.Warn(input)
 	// Init a new map with hte make func to create a new output for our downstream data
 	output = make(map[string]map[string]interface{})
 	// There is only a single index [0] returned from influx

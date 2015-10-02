@@ -21,12 +21,12 @@ type Config struct {
 	Alarms      []Alarm `json:"alarms"`
 	GrafanaUrl  string  `json:"grafana_url"`
 	GrafanaAuth string  `json:"grafana_auth"`
+	KataHome    string  `json:"kata_home"`
 }
 
-const (
-	DefaultGrafanaUrl  = "localhost:3000"
-	DefaultGrafanaAuth = "CATA_GRAFANA_AUTH Not Set!"
-)
+var DefaultGrafanaUrl = "localhost:3000"
+var DefaultGrafanaAuth = "KATA_GRAFANA_AUTH Not Set!"
+var DefaultKataHome = fmt.Sprintf("%s/.kata", os.Getenv("HOME"))
 
 func ParseEnv(c Config) Config {
 	// Create a few matches for our env parsing down the road
@@ -35,10 +35,13 @@ func ParseEnv(c Config) Config {
 	matchGrafanaUrl, _ := regexp.Compile("KATA_GRAFANA_URL=*")
 	// Get the auth bearer for grafana api
 	matchGrafanaAuth, _ := regexp.Compile("KATA_GRAFANA_AUTH=*")
+	// Get home kata
+	matchKataHome, _ := regexp.Compile("KATA_HOME=*")
 
 	// Set the defaults and override later
 	c.GrafanaUrl = DefaultGrafanaUrl
 	c.GrafanaAuth = DefaultGrafanaAuth
+	c.KataHome = DefaultKataHome
 
 	// Parse the env for our config
 	for _, e := range os.Environ() {
@@ -63,10 +66,16 @@ func ParseEnv(c Config) Config {
 			grafanaAuth := strings.Split(e, "=")[1]
 			c.GrafanaAuth = grafanaAuth
 		}
+		if matchKataHome.MatchString(e) {
+			newKataHome := strings.Split(e, "=")[1]
+			c.KataHome = newKataHome
+		}
 	}
 	// Plug the config into stdout so we have a record
 	log.Info("Grafana URL: ", c.GrafanaUrl)
 	log.Info("Grafana Auth: ", c.GrafanaAuth)
+	log.Info("Kata Home: ", c.KataHome)
+	checkhome(c.KataHome)
 	// Get the consoles from the env
 	return c
 }
@@ -90,4 +99,13 @@ func ParseConfig() (c Config) {
 
 	c = ParseEnv(c)
 	return c
+}
+
+func checkhome(path string) {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := os.MkdirAll(path, 0755)
+		if err != nil {
+			log.Error(err)
+		}
+	}
 }
