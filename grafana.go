@@ -32,7 +32,7 @@ func createHostDashboard(hostname string) {
 	// Update the hostname
 	hostdash.Hostname = hostname
 	// Parse a new json template and save it
-	t, err := template.ParseFiles("templates/host_dashboard.json.template")
+	t, err := template.ParseFiles("grafana_config/host_dashboard.json.template")
 	if err != nil {
 		log.Error("Issue parsing dashboard template for ", hostname)
 		log.Error(err)
@@ -91,4 +91,9 @@ func makeDirectories(hostname string, katahome string) {
 	if err != nil {
 		log.Error(err)
 	}
+}
+
+func makeInfluxDatasource() {
+	//c := ParseConfig()
+
 }

@@ -71,10 +71,6 @@ func ParseEnv(c Config) Config {
 			c.KataHome = newKataHome
 		}
 	}
-	// Plug the config into stdout so we have a record
-	log.Debug("Grafana URL: ", c.GrafanaUrl)
-	log.Debug("Grafana Auth: ", c.GrafanaAuth)
-	log.Debug("Kata Home: ", c.KataHome)
 	checkhome(c.KataHome)
 	// Get the consoles from the env
 	return c

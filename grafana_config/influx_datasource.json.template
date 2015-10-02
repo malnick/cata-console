@@ -1,0 +1,16 @@
+{
+  "id": 1,
+  "orgId": 1,
+  "name": "kata_console",
+  "type": "influxdb",
+  "access": "direct",
+  "url": "{{.InfluxUrl}}:{{.InfluxPort}}",
+  "password": "{{.InfluxUser}}",
+  "user": "{{.InfluxPassword}}",
+  "database": "hosts",
+  "basicAuth": {{.InfluxBasicAuthEnabled}},
+  "basicAuthUser": "{{.InfluxBasicAuthUser}}",
+  "basicAuthPassword": "{{.InfluxBasicAuthPassword}}",
+  "isDefault": true,
+  "jsonData": null
+}

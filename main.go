@@ -41,13 +41,21 @@ func main() {
 	fmt.Println(`                   .@                            /@@@@@@@@@%(,.  .,#&@@@@@&    		`)
 	fmt.Println(`                    *                                #@@@@@@@@@@@@@@@@@@#      		`)
 	fmt.Println(``)
-	fmt.Println(`|/  _  _ _|_ __ _  |    /   _ __  _  _  |  _ `)
-	fmt.Println(`|\ (/__>  |_ | (/_ |    \__(_)| |_> (_) | (/_`)
+	fmt.Println(`  ____  __.         __            _________                                 .__           `)
+	fmt.Println(` |    |/ _|_____  _/  |_ _____    \_   ___ \   ____    ____    ______ ____  |  |    ____  `)
+	fmt.Println(` |      <  \__  \ \   __\\__  \   /    \  \/  /  _ \  /    \  /  ___//  _ \ |  |  _/ __ \ `)
+	fmt.Println(` |    |  \  / __ \_|  |   / __ \_ \     \____(  <_> )|   |  \ \___ \(  <_> )|  |__\  ___/ `)
+	fmt.Println(` |____|__ \(____  /|__|  (____  /  \______  / \____/ |___|  //____  >\____/ |____/ \___  >`)
+	fmt.Println(`         \/     \/            \/          \/              \/      \/                   \/ `)
 	fmt.Println(``)
 	// Parse flags
 	flag.Parse()
 	// Parse the config here before doing anything else
 	_ = ParseConfig()
+	//log.Debug("Grafana URL: ", c.GrafanaUrl)
+	//log.Debug("Grafana Auth: ", c.GrafanaAuth)
+	//log.Debug("Kata Home: ", c.KataHome)
+
 	// Run the router
 	router := NewRouter()
 	// Handle a failure
