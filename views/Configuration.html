@@ -13,32 +13,19 @@
       <div class="panel-heading">
         <div class="page-header">
           <nav class="navbar navbar-header navbar-fixed-top">
-            <h1 class="navbar-text navbar-center">Kata Console<small> A REST Monitoring Platform in Go</small><h1>
+            <h1 class="navbar-text navbar-center">Kata Console<small> Configuration</small><h1>
             <div class="navbar-header">
-              <button type="button" class="btn btn-default navbar-btn"><a href="/config">Console Configuration</a></button>
+              <button type="button" class="btn btn-default navbar-btn"><a href="/">Back to Main</a></button>
             </div>
           </nav>
         </div>
       </div>
       <div class="panel-body">
-      {{with .AvailableHosts}}
-      {{range $host, $hits := .}}
       <table class="table table-bordered">
         <tr>
-          <th><h3 class="text-capitalize">{{$host}}<small> Cata Agent</small></h3></th>
+          <th>Log Level</th><td>{{.LogLevel}}</td>
         </tr>
-        <td>
-          <ul class="nav nav-pills" role="tablist">
-
-            <li role="presentation"><a href="host/{{$host}}/latest">Dashboard</a></li>
-            <li role="presentation"><a href="host/{{$host}}">Explore Data <span class="badge">{{$hits}}</span></a></li>
-            <li role="presentation"><a href="host/{{$host}}/alarms">Set Alarms</a></li>
-            <li role="presentation" class="label label-danger"><a href="host/{{$host}}/alerts">Alerts <span class="badge">number</span></a></li>
-          </ul>
-        </td>
       </table>
-      {{end}}
-      {{end}}
     </div>
 
   </body>

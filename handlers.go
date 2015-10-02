@@ -191,3 +191,10 @@ func ConsoleHostnameRootMeasurementTimevalue(w http.ResponseWriter, r *http.Requ
 	t, _ := template.ParseFiles("views/MeasurementByTimeHostData.html")
 	t.Execute(w, p)
 }
+
+// Config page
+func ConsoleConfig(w http.ResponseWriter, r *http.Request) {
+	c := ParseConfig()
+	t, _ := template.ParseFiles("views/Configuration.html")
+	t.Execute(w, c)
+}
