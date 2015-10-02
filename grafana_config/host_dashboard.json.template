@@ -611,7 +611,7 @@
       "collapse": false,
       "panels": [
         {
-          "title": "Bohr-2.local Disk Percentage Used",
+          "title": "{{.}} Disk Percentage Used",
           "error": false,
           "span": 12,
           "editable": true,
@@ -669,7 +669,7 @@
                 {
                   "key": "hostname",
                   "operator": "=",
-                  "value": "Bohr-2.local"
+                  "value": "{{.}}"
                 }
               ],
               "groupBy": [
@@ -685,7 +685,7 @@
                 }
               ],
               "measurement": "disk",
-              "query": "SELECT max(\"used_percent\") AS \"used_percent\" FROM \"disk\" WHERE \"hostname\" = 'Bohr-2.local' AND $timeFilter GROUP BY time($interval)"
+              "query": "SELECT max(\"used_percent\") AS \"used_percent\" FROM \"disk\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
             }
           ],
           "aliasColors": {},
@@ -708,7 +708,7 @@
       "collapse": false,
       "panels": [
         {
-          "title": "Bohr-2.local Total Available Disk",
+          "title": "{{.}} Total Available Disk",
           "error": false,
           "span": 12,
           "editable": true,
@@ -725,7 +725,7 @@
                 {
                   "key": "hostname",
                   "operator": "=",
-                  "value": "Bohr-2.local"
+                  "value": "{{.}}"
                 }
               ],
               "groupBy": [
@@ -741,7 +741,7 @@
                 }
               ],
               "measurement": "disk",
-              "query": "SELECT median(\"total\") AS \"total\" FROM \"disk\" WHERE \"hostname\" = 'Bohr-2.local' AND $timeFilter GROUP BY time($interval)"
+              "query": "SELECT median(\"total\") AS \"total\" FROM \"disk\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
             }
           ],
           "cacheTimeout": null,
