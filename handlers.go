@@ -88,6 +88,7 @@ func Console(w http.ResponseWriter, r *http.Request) {
 	}
 	// For each unique host, count the number of host entries
 	for _, host := range uniqueHosts {
+		log.Warn("Counting entries for ", host)
 		p.AvailableHosts[host] = countHostEntries(host)
 	}
 	t, _ := template.ParseFiles("views/MainPage.html")

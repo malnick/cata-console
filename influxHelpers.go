@@ -107,7 +107,7 @@ func getTimevalueHostDataMeasure(host string, measurement string, timestamp stri
 func countHostEntries(host string) string {
 	log.Debug("Counting host entries for ", host)
 	influxClient := SetInflux()
-	cmd := fmt.Sprintf("select count(hostname) from /.*/ where hostname = '%s'", host)
+	cmd := fmt.Sprintf("select count(hostname) from host where hostname = '%s'", host)
 	resp, err := queryInfluxDb(influxClient, cmd, InfluxDb)
 	if err != nil {
 		log.Error(err)
