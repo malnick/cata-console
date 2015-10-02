@@ -9,6 +9,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 type AllHostDataPage struct {
@@ -99,7 +100,10 @@ func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 	hostname := vars["hostname"]
 	// Create grafana dashboard for our hostname
 	log.Info("Request for latest host data for ", hostname)
+	// Creates new json template for hostname and POSTs it to Grafana if it doesn't exist
 	createHostDashboard(hostname)
+	// Dash the hostname - Grafana URLs turn '.' into '-' so hostnames need to be sanitized
+	dashHostname := strings.Replace(hostname, ".", "-", -1)
 
 	// Get a local Latest Host Data strcut and init a new map for the
 	var p LatestHostDataPage
@@ -107,8 +111,11 @@ func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Error(err)
 	}
-	// data parameter
-	p.Data = transformResultsToMap(results) // make(map[string]map[string]interface{})
+	// Add our dashed hostname parameter
+	p.DashedHost = dashHostname
+
+	// Take the results from influx and transform them into something other than influx line protocol format
+	p.Data = transformResultsToMap(results)
 
 	log.Debug("Latest data for ", hostname, ":")
 
