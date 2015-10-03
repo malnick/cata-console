@@ -86,7 +86,7 @@ func ParseEnv(c Config) Config {
 		if matchEnv.MatchString(e) {
 			var newAlarm Alarm
 			log.Debug("New alarm found: ", e)
-			newAlarm.Name = strings.Split(strings.Split(e, "=")[0], "CATA_ALARM_")[1]
+			newAlarm.Name = strings.Split(strings.Split(e, "=")[0], "KATA_ALARM_")[1]
 			//	Crit value is first in list
 			crit, _ := strconv.Atoi(strings.Split(strings.Split(e, "=")[1], ",")[0])
 			warn, _ := strconv.Atoi(strings.Split(strings.Split(e, "=")[1], ",")[1])

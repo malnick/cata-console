@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.m  in.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   </head>
-  <body onload="JavaScript:timedRefresh(5000);"> 
+  <body onload="JavaScript:timedRefresh(60000);"> 
     <div class="container">
       <div class="panel-heading">
         <div class="page-header">
@@ -32,7 +32,7 @@
       {{range $host, $hits := .}}
       <table class="table table-bordered">
         <tr>
-          <th><h3 class="text-capitalize">{{$host}}<small> Cata Agent</small></h3></th>
+          <th><h3 class="text-capitalize">{{$host}}<small> Kata Agent</small></h3></th>
         </tr>
         <td>
           <ul class="nav nav-pills" role="tablist">
