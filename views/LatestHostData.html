@@ -2,10 +2,17 @@
 <html>
   <head>
     <script type="text/JavaScript">
-      document.getElementById('graph').contentDocument.location.reload(true);
+      function reloadIframe(iframeSel) {
+        document.querySelector(iframeSel).src = document.querySelector(iframeSel).src;
+      }
+      setInterval(function() {
+        reloadIframe('graph1'); 
+        reloadIframe('graph2');
+        reloadIframe('graph9');
+        reloadIframe('graph10');
+      }, 5000);
     </script>
     <title>Kata Console</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css  ">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.m  in.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -35,13 +42,13 @@
           <div class="span1">
           </div>
           <div class="span10">
-            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=10&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0" id="graph"></iframe>
+            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=10&fullscreen&from=now-15m&to=now"  id="graph10" width="500" height="250" frameborder="0"></iframe>
 
-            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=9&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0" id="graph"></iframe>
+            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=9&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0" id="graph9"></iframe>
 
-            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=1&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0" id="graph"></iframe>
+            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=1&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0" id="graph1"></iframe>
 
-            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=2&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0" id="graph"></iframe>
+            <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=2&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0" id="graph2"></iframe>
 
             <iframe src="http://localhost:3000/dashboard-solo/db/{{.}}?panelId=3&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0"></iframe>
 
