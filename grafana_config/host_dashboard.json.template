@@ -701,6 +701,85 @@
       "collapse": false,
       "panels": []
     },
+  {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(232, 15, 223, 0.9)",
+            "rgba(239, 112, 8, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": null,
+          "editable": true,
+          "error": false,
+          "format": "bytes",
+          "id": 8,
+          "interval": null,
+          "links": [],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "span": 12,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(13, 211, 239)",
+            "show": true
+          },
+          "targets": [
+            {
+              "fields": [
+                {
+                  "func": "median",
+                  "name": "total"
+                }
+              ],
+              "groupBy": [
+                {
+                  "interval": "auto",
+                  "type": "time"
+                }
+              ],
+              "measurement": "disk",
+              "query": "SELECT median(\"total\") AS \"total\" FROM \"disk\" WHERE \"hostname\" = 'demo-mesosslave-10-0-0-30' AND $timeFilter GROUP BY time($interval) fill(none)",
+              "refId": "A",
+              "tags": [
+                {
+                  "key": "hostname",
+                  "operator": "=",
+                  "value": "demo-mesosslave-10-0-0-30"
+                }
+              ],
+              "fill": "none"
+            }
+          ],
+          "thresholds": "",
+          "title": "demo-mesosslave-10-0-0-30 Total Available Disk",
+          "transparent": true,
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "avg"
+        }
+      ],
+      "title": "New row"
+    },
     {
       "title": "New row",
       "height": "250px",
@@ -708,12 +787,96 @@
       "collapse": false,
       "panels": [
         {
-          "title": "{{.}} Total Available Disk",
+          "title": "{{.}} Uptime",
           "error": false,
           "span": 12,
           "editable": true,
           "type": "singlestat",
-          "id": 8,
+          "id": 9,
+          "links": [
+            {
+              "type": "dashboard"
+            }
+          ],
+          "datasource": null,
+          "maxDataPoints": 100,
+          "interval": null,
+          "targets": [
+            {
+              "refId": "A",
+              "tags": [
+                {
+                  "key": "hostname",
+                  "operator": "=",
+                  "value": "{{.}}"
+                }
+              ],
+              "groupBy": [
+                {
+                  "type": "time",
+                  "interval": "auto"
+                }
+              ],
+              "fields": [
+                {
+                  "name": "uptime",
+                  "func": "max"
+                }
+              ],
+              "measurement": "host",
+              "query": "SELECT max(\"uptime\") AS \"uptime\" FROM \"host\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval) fill(0)",
+              "fill": "0"
+            }
+          ],
+          "cacheTimeout": null,
+          "format": "ms",
+          "prefix": "",
+          "postfix": "",
+          "nullText": null,
+          "valueMaps": [
+            {
+              "value": "null",
+              "op": "=",
+              "text": "N/A"
+            }
+          ],
+          "nullPointMode": "connected",
+          "valueName": "avg",
+          "prefixFontSize": "50%",
+          "valueFontSize": "80%",
+          "postfixFontSize": "50%",
+          "thresholds": "",
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(12, 246, 61, 0.97)",
+            "rgba(244, 110, 14, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "sparkline": {
+            "show": true,
+            "full": true,
+            "lineColor": "rgb(239, 16, 193)",
+            "fillColor": "rgba(29, 10, 244, 0.18)"
+          },
+          "transparent": true,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "title": "New row",
+      "height": "250px",
+      "editable": true,
+      "collapse": false,
+      "panels": [
+        {
+          "title": "{{.}} % Memory Used",
+          "error": false,
+          "span": 12,
+          "editable": true,
+          "type": "singlestat",
+          "id": 10,
           "links": [],
           "datasource": null,
           "maxDataPoints": 100,
@@ -736,26 +899,21 @@
               ],
               "fields": [
                 {
-                  "name": "total",
-                  "func": "median"
+                  "name": "used_percent",
+                  "func": "max"
                 }
               ],
-              "measurement": "disk",
-              "query": "SELECT median(\"total\") AS \"total\" FROM \"disk\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
+              "measurement": "memory",
+              "query": "SELECT max(\"used_percent\") AS \"used_percent\" FROM \"memory\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval) fill(previous)",
+              "fill": "previous"
             }
           ],
           "cacheTimeout": null,
-          "format": "none",
+          "format": "percent",
           "prefix": "",
           "postfix": "",
           "nullText": null,
-          "valueMaps": [
-            {
-              "value": "null",
-              "op": "=",
-              "text": "N/A"
-            }
-          ],
+          "valueMaps": [],
           "nullPointMode": "connected",
           "valueName": "avg",
           "prefixFontSize": "50%",
@@ -765,15 +923,15 @@
           "colorBackground": false,
           "colorValue": true,
           "colors": [
-            "rgba(54, 229, 245, 0.9)",
-            "rgba(239, 112, 8, 0.89)",
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 113, 10, 0.89)",
             "rgba(50, 172, 45, 0.97)"
           ],
           "sparkline": {
             "show": true,
-            "full": false,
-            "lineColor": "rgb(31, 120, 193)",
-            "fillColor": "rgba(31, 118, 189, 0.18)"
+            "full": true,
+            "lineColor": "rgba(248, 56, 6, 0.93)",
+            "fillColor": "rgba(38, 8, 244, 0.2)"
           },
           "transparent": true
         }

@@ -1,3 +1,4 @@
+// +build linux darwin amd64
 package main
 
 import (
