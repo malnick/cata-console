@@ -108,7 +108,7 @@ func createGrafanaIframes(hostname string) (uris []string) {
 	grafanaUrl := c.GrafanaUrl
 	// We have 10 IDed URIs for Grafana
 	id := 1
-	for id < 10 {
+	for id < 11 {
 		newIframeUri := fmt.Sprintf("<iframe src=\"http://%s/dashboard-solo/db/%s?panelId=%s&fullscreen&from=now-15m&to=now\" id=\"graph%s\" width=\"500\" height=\"250\" frameborder=\"0\"></iframe>",
 			grafanaUrl,
 			dashedHostname,
