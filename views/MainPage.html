@@ -2,13 +2,18 @@
 <html>
   
   <head>
+    <script type="text/JavaScript">
+      function timedRefresh(timeoutPeriod) {
+        setTimeout("location.reload(true);",timeoutPeriod);
+      }
+    </script>
     <title>Kata Console</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css  ">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.m  in.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   </head>
-  <body> 
+  <body onload="JavaScript:timedRefresh(5000);"> 
     <div class="container">
       <div class="panel-heading">
         <div class="page-header">

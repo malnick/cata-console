@@ -25,7 +25,7 @@ func createHostDashboard(hostname string) {
 	// Get our host data file path
 	hostJsonFile := fmt.Sprintf("%s/dashboard_templates/%s_dashboard.json", katahome, hostname)
 	// If the host data file exists, don't do anything - else, create it and post to grafana
-	//	if _, err := os.Stat(hostJsonFile); os.IsNotExist(err) {
+	//if _, err := os.Stat(hostJsonFile); os.IsNotExist(err) {
 	log.Warn(hostJsonFile, " not found. Creating and executing new dashboard from template.")
 	// Init a new dashboard obj
 	var hostdash HostDashboard
@@ -51,7 +51,7 @@ func createHostDashboard(hostname string) {
 		log.Error(err)
 	}
 	updateHostDashboard(hostJsonFile)
-	//	}
+	//}
 }
 
 func updateHostDashboard(hostJsonFile string) {
