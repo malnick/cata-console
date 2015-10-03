@@ -157,6 +157,34 @@ func ConsoleHostnameRootMeasurement(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, p)
 }
 
+//host/$hostname/$measurement/$metric
+func ConsoleHostnameRootMeasurementMetric(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	// Get hostname from passed URL
+	hostname := vars["hostname"]
+	// Get measurement from passed URL
+	measurement := vars["measurement"]
+	// Get sanitized time
+	metric := vars["metric"]
+
+	results, err := getMetricHostDataMeasure(hostname, measurement, metric)
+	if err != nil {
+		log.Error(err)
+	}
+
+	var p AllHostDataPage
+	mapped := transformResultsToMap(results)
+
+	p.Queries = mapped
+
+	p.Host = vars["hostname"]
+
+	// Parse Template
+	t, _ := template.ParseFiles("views/MeasurementByMetricHostData.html")
+	t.Execute(w, p)
+}
+
+//host/$hostname/$measurement/$metric/$timestamp
 func ConsoleHostnameRootMeasurementTimevalue(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	// Get hostname from passed URL

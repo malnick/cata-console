@@ -89,6 +89,19 @@ func getAllHostDataMeasure(host string, measurement string) ([]client.Result, er
 	return allData, nil
 }
 
+// Get measurement metric timestamps and values
+func getMetricHostDataMeasure(hostname string, measurement string, metric string) ([]client.Result, error) {
+	// Get the new client
+	influxClient := SetInflux()
+	// Cmd to query all data for host
+	cmd := fmt.Sprintf("select %s from %s where hostname = '%s'", metric, measurement, hostname)
+	allData, err := queryInfluxDb(influxClient, cmd, InfluxDb)
+	if err != nil {
+		return allData, err
+	}
+	return allData, nil
+}
+
 // Get data by sha1 to convert to timed data
 func getTimevalueHostDataMeasure(host string, measurement string, timestamp string) ([]client.Result, error) {
 	// Get the new client

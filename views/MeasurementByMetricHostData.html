@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
   <head>
-    <title>kata Console</title>
+    <title>Kata Console</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css  ">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.m  in.css">
@@ -25,26 +25,30 @@
       <div class="panel panel-primary">
       {{$hostname := .Host}}
       {{range $measurement, $data := .Queries}}
+      {{range $metric, $values := $data}}
+      {{if ne $metric "time"}}
       <table class="table table-bordered">
         <tr>
-          <th><h3 class="text-capitalize"><a href="/host/{{$hostname}}/{{$measurement}}">{{$measurement}}</a><small> Data</small></h3></th>
+          <th><h3 class="text-capitalize"><a href="/host/{{$hostname}}/{{$measurement}}">{{$metric}}</a><small> Data</small></h3></th>
         </tr>
-        <td>
+         <td>
           <div class="btn-group" role="group" >
             <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                {{$measurement}}
+              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="t  rue">
+                 {{$metric}}
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                {{range $metric, $values := $data}}
-                <li><a href="/host/{{$hostname}}/{{$measurement}}/{{$metric}}">{{$metric}}</a></li>
+                 {{range $time, $metricvalue := $values}}
+                 <li><a href="/host/{{$hostname}}/{{$measurement}}/{{$metric}}/{{$time}}">{{$time}}</a></li>
                 {{end}}
               </ul>
             </div>
-          </div>
+           </div>
         </td>
       </table>
+      {{end}}
+      {{end}}
       {{end}}
     </div>
   </body>
