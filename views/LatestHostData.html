@@ -2,15 +2,16 @@
 <html>
   <head>
     <script type="text/JavaScript">
-      function reloadIframe(iframeSel) {
-        document.querySelector(iframeSel).src = document.querySelector(iframeSel).src;
+      function reloadAllIframes() {
+          var iframes = document.querySelectorAll('iframe');
+          for (var i = 0; i < iframes.length; i++) {
+          iframes[i].src = iframes[i].src;
+          }
       }
+          
       setInterval(function() {
-        reloadIframe('graph1'); 
-        reloadIframe('graph2');
-        reloadIframe('graph9');
-        reloadIframe('graph10');
-      }, 5000);
+        reloadAllIframes();
+      }, 30000);
     </script>
     <title>Kata Console</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css  ">
