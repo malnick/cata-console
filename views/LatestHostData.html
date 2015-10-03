@@ -41,26 +41,12 @@
           <div class="span1">
           </div>
           <div class="span10">
-            <iframe src="http://{{.GrafanaUrl}}:{{.GrafanaPort}}/dashboard-solo/db/{{.DashedHost}}?panelId=10&fullscreen&from=now-15m&to=now"  id="graph10" width="500" height="250" frameborder="0"></iframe>
-
-            <iframe src="http://{{.GrafanaUrl}}:{{.GrafanaPort}}/dashboard-solo/db/{{.DashedHost}}?panelId=9&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0" id="graph9"></iframe>
-
-            <iframe src="http://localhost:3000/dashboard-solo/db/{{.DashedHost}}?panelId=1&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0" id="graph1"></iframe>
-
-            <iframe src="http://localhost:3000/dashboard-solo/db/{{.DashedHost}}?panelId=2&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0" id="graph2"></iframe>
-
-            <iframe src="http://localhost:3000/dashboard-solo/db/{{.DashedHost}}?panelId=3&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0"></iframe>
-
-            <iframe src="http://localhost:3000/dashboard-solo/db/{{.DashedHost}}?panelId=4&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0"></iframe>
-
-            <iframe src="http://localhost:3000/dashboard-solo/db/{{.DashedHost}}?panelId=5&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0" id="graph"></iframe>
-
-            <iframe src="http://localhost:3000/dashboard-solo/db/{{.DashedHost}}?panelId=6&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0"></iframe>
-            
-            <iframe src="http://localhost:3000/dashboard-solo/db/{{.DashedHost}}?panelId=7&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0"></iframe>
-
-            <iframe src="http://localhost:3000/dashboard-solo/db/{{.DashedHost}}?panelId=8&fullscreen&from=now-15m&to=now" width="500" height="250" frameborder="0"></iframe>
-
+          {{with .GrafanaUris}}
+          {{range $iframes := .}}
+          {{.}}
+          
+          {{end}}
+          {{end}}
           </div>
         </div>  
       </div>

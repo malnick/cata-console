@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 	"text/template"
 )
 
@@ -98,22 +100,24 @@ func makeInfluxDatasource() {
 
 }
 
-func createGrafanaIframes(hostname string) uris []string {
-	// Get a local config set to use the grafana uri and port 
+func createGrafanaIframes(hostname string) (uris []string) {
+	// Get a local config set to use the grafana uri and port
 	c := ParseConfig()
 	// Create a dashed hostname for the grafana host
-	dashHostname := strings.Replace(hostname, ".", "-", -1)
+	dashedHostname := strings.Replace(hostname, ".", "-", -1)
 	grafanaUrl := c.GrafanaUrl
 	// We have 10 IDed URIs for Grafana
 	id := 1
 	for id < 10 {
-		newIframeUri := fmt.Sprintf("<iframe src=\"http://%s/dashboard-solo/db/%s?panelId=10&fullscreen&from=now-15m&to=now\" id=\"graph%s\" width=\"500\" height=\"250\" frameborder=\"0\"></iframe>",
-			grafanaurl,
+		newIframeUri := fmt.Sprintf("<iframe src=\"http://%s/dashboard-solo/db/%s?panelId=%s&fullscreen&from=now-15m&to=now\" id=\"graph%s\" width=\"500\" height=\"250\" frameborder=\"0\"></iframe>",
+			grafanaUrl,
 			dashedHostname,
-			id
-		)
-		uris = append(uris, NewIframeUri)
+			strconv.Itoa(id),
+			strconv.Itoa(id))
+		// Append the new URI to our returned array
+		uris = append(uris, newIframeUri)
+		log.Debug("New iframe ", newIframeUri)
 		id += 1
 	}
-	retrun uris
+	return uris
 }

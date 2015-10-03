@@ -9,7 +9,8 @@ import (
 	"html/template"
 	"io/ioutil"
 	"net/http"
-	"strings"
+	textTemplate "text/template"
+	//	"strings"
 )
 
 type AllHostDataPage struct {
@@ -20,9 +21,7 @@ type AllHostDataPage struct {
 type LatestHostDataPage struct {
 	Data        map[string]map[string]interface{}
 	Host        string
-	DashedHost  string
-	GrafanaUrl  string
-	GrafanaPort string
+	GrafanaUris []string
 }
 
 type MainPage struct {
@@ -101,30 +100,18 @@ func Console(w http.ResponseWriter, r *http.Request) {
 func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	hostname := vars["hostname"]
+	var p LatestHostDataPage
 	// Create grafana dashboard for our hostname
 	log.Info("Request for latest host data for ", hostname)
 	// Creates new json template for hostname and POSTs it to Grafana if it doesn't exist
 	createHostDashboard(hostname)
-	// Dash the hostname - Grafana URLs turn '.' into '-' so hostnames need to be sanitized
-	dashHostname := strings.Replace(hostname, ".", "-", -1)
 
-	// Get a local Latest Host Data strcut and init a new map for the
-	var p LatestHostDataPage
-	results, err := getLatestHostData(hostname)
-	if err != nil {
-		log.Error(err)
-	}
-	// Add our dashed hostname parameter
-	p.DashedHost = dashHostname
+	// Make the iframe URIs for the latest graphs.
+	p.GrafanaUris = createGrafanaIframes(hostname)
 
-	// Take the results from influx and transform them into something other than influx line protocol format
-	p.Data = transformResultsToMap(results)
-
-	log.Debug("Latest data for ", hostname, ":")
-
-	// Execute template
+	// Execute text template so we can drop in clear strings with no formating
 	p.Host = hostname
-	t, _ := template.ParseFiles("views/LatestHostData.html")
+	t, _ := textTemplate.ParseFiles("views/LatestHostData.html")
 	t.Execute(w, p)
 }
 
