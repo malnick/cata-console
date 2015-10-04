@@ -108,9 +108,9 @@ func influxify(data []*HttpPost) []client.Point {
 			// The metric we're about to influxify
 			log.Debug(metricName)
 			// Ensure our assertion type checks appropriately
-			switch isMap := metricValues.(type) {
+			switch notSure := metricValues.(type) {
 			case map[string]interface{}:
-				for metrickey, measurement := range isMap {
+				for metrickey, measurement := range notSure {
 					switch measurement.(type) {
 					case float64:
 						// Same for each block
@@ -160,6 +160,18 @@ func influxify(data []*HttpPost) []client.Point {
 						cp.Fields[metrickey] = measurement.(uint64)
 						cp.Tags["hostname"] = values.Host
 						cp.Tags["sha1"] = shastamp
+					}
+				}
+			// netcon and netio are both interface arrays
+			case []interface{}:
+				for index, block := range notSure {
+					log.Debug("NET ", index, " ", block)
+					switch block.(type) {
+					case map[string]interface{}:
+						for key, values := range block.(map[string]interface{}) {
+							log.Warn(key, " ", values)
+
+						}
 					}
 				}
 			default:
