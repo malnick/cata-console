@@ -164,14 +164,12 @@ func influxify(data []*HttpPost) []client.Point {
 				}
 			// netcon and netio are both interface arrays
 			case []interface{}:
-				for index, block := range notSure {
-					log.Debug("NET ", index, " ", block)
+				for _, block := range notSure {
 					switch block.(type) {
 					case map[string]interface{}:
 						for metrickey, metricvalues := range block.(map[string]interface{}) {
 							switch metricvalues.(type) {
 							case float64:
-								log.Debug("values is float64")
 								cp.Time = timestamp
 								cp.Measurement = metricName
 								log.Debug(fmt.Sprintf("%s: %s", metrickey, metricvalues))
@@ -179,7 +177,6 @@ func influxify(data []*HttpPost) []client.Point {
 								cp.Tags["hostname"] = values.Host
 								cp.Tags["sha1"] = shastamp
 							case string:
-								log.Debug("values is string")
 								cp.Time = timestamp
 								cp.Measurement = metricName
 								log.Debug(fmt.Sprintf("%s: %s", metrickey, metricvalues))
@@ -187,7 +184,6 @@ func influxify(data []*HttpPost) []client.Point {
 								cp.Tags["hostname"] = values.Host
 								cp.Tags["sha1"] = shastamp
 							case int:
-								log.Debug("values is int")
 								cp.Time = timestamp
 								cp.Measurement = metricName
 								log.Debug(fmt.Sprintf("%s: %s", metrickey, metricvalues))
@@ -195,13 +191,18 @@ func influxify(data []*HttpPost) []client.Point {
 								cp.Tags["hostname"] = values.Host
 								cp.Tags["sha1"] = shastamp
 							case map[string]interface{}:
-								log.Warn("values is map interface")
+								cp.Time = timestamp
+								cp.Measurement = metricName
+								log.Debug(fmt.Sprintf("%s: %s", metrickey, metricvalues))
+								cp.Fields[metrickey] = metricvalues.(map[string]interface{})
+								cp.Tags["hostname"] = values.Host
+								cp.Tags["sha1"] = shastamp
 							}
 						}
 					}
 				}
 			default:
-				log.Debug("No maps found")
+				log.Error("Could not match type for ", metricName)
 			}
 			// Let's check out data
 			log.Info("New data for ", values.Host)
