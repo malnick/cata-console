@@ -11,13 +11,16 @@
     <div class="container">
       <div class="panel-heading">
         <div class="page-header">
-         <nav class="navbar navbar-fixed-top">
-           <h1 class="navbar-text navbar-center">{{with .Host}}{{.}}{{end}}<small> Data</small></h1>
-             <div class="navbar-header">
-             <button type="button" class="btn btn-default navbar-btn"><a href="/">Main</a></button>
-           </div>
-         </nav>
-       </div>
+          <nav class="navbar">
+            <div class="navbar-inner">
+              <a class="brand" href="/"><h1>{{with .Host}}{{.}}{{end}}<small> All Data</small></h1></a>
+              <ul class="nav">
+                <li><a href="/config">Configuration</a></li>
+                <li><a href="/">Main</a></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
       </div>
       <div class="panel panel-primary">
       {{$hostname := .Host}}
