@@ -168,9 +168,35 @@ func influxify(data []*HttpPost) []client.Point {
 					log.Debug("NET ", index, " ", block)
 					switch block.(type) {
 					case map[string]interface{}:
-						for key, values := range block.(map[string]interface{}) {
-							log.Warn(key, " ", values)
-
+						for metrickey, metricvalues := range block.(map[string]interface{}) {
+							switch metricvalues.(type) {
+							case float64:
+								log.Debug("values is float64")
+								cp.Time = timestamp
+								cp.Measurement = metricName
+								log.Debug(fmt.Sprintf("%s: %s", metrickey, metricvalues))
+								cp.Fields[metrickey] = metricvalues.(float64)
+								cp.Tags["hostname"] = values.Host
+								cp.Tags["sha1"] = shastamp
+							case string:
+								log.Debug("values is string")
+								cp.Time = timestamp
+								cp.Measurement = metricName
+								log.Debug(fmt.Sprintf("%s: %s", metrickey, metricvalues))
+								cp.Fields[metrickey] = metricvalues.(string)
+								cp.Tags["hostname"] = values.Host
+								cp.Tags["sha1"] = shastamp
+							case int:
+								log.Debug("values is int")
+								cp.Time = timestamp
+								cp.Measurement = metricName
+								log.Debug(fmt.Sprintf("%s: %s", metrickey, metricvalues))
+								cp.Fields[metrickey] = metricvalues.(int)
+								cp.Tags["hostname"] = values.Host
+								cp.Tags["sha1"] = shastamp
+							case map[string]interface{}:
+								log.Warn("values is map interface")
+							}
 						}
 					}
 				}
