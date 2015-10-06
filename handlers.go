@@ -97,12 +97,13 @@ func Console(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
+// Root Dashboard route for host
+func ConsoleHostnameDashboardRoot(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	hostname := vars["hostname"]
 	var p LatestHostDataPage
 	// Create grafana dashboard for our hostname
-	log.Info("Request for latest host data for ", hostname)
+	log.Info("Request dashboard for ", hostname)
 	// Creates new json template for hostname and POSTs it to Grafana if it doesn't exist
 	createHostDashboards(hostname)
 
@@ -111,7 +112,26 @@ func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 
 	// Execute text template so we can drop in clear strings with no formating
 	p.Host = hostname
-	t, _ := textTemplate.ParseFiles("views/LatestHostData.html")
+	t, _ := textTemplate.ParseFiles("views/HostDashboardRoot.html")
+	t.Execute(w, p)
+}
+
+// Memory dashboard for host
+func ConsoleHostnameDashboardMemory(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	hostname := vars["hostname"]
+	var p LatestHostDataPage
+	// Create grafana dashboard for our hostname
+	log.Info("Request memory dashboard for ", hostname)
+	// Creates new json template for hostname and POSTs it to Grafana if it doesn't exist
+	createHostDashboards(hostname)
+
+	// Make the iframe URIs for the latest graphs.
+	p.GrafanaUris = createGrafanaIframes(hostname)
+
+	// Execute text template so we can drop in clear strings with no formating
+	p.Host = hostname
+	t, _ := textTemplate.ParseFiles("views/HostDashboardMemory.html")
 	t.Execute(w, p)
 }
 

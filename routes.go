@@ -32,10 +32,16 @@ var routes = Routes{
 		ConsoleConfig,
 	},
 	Route{
-		"HostnameLatest",
+		"HostnameDashboardRoot",
 		"GET",
-		"/host/{hostname}/latest",
-		ConsoleHostnameLatest,
+		"/host/{hostname}/dashboard",
+		ConsoleHostnameDashboardRoot,
+	},
+	Route{
+		"HostnameDashboardMemory",
+		"GET",
+		"/host/{hostname}/dashboard/memory",
+		ConsoleHostnameDashboardMemory,
 	},
 	Route{
 		"HostnameRoot",
