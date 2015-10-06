@@ -1,18 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
   <head>
-    <script type="text/JavaScript">
-      function reloadAllIframes() {
-          var iframes = document.querySelectorAll('iframe');
-          for (var i = 0; i < iframes.length; i++) {
-          iframes[i].src = iframes[i].src;
-          }
-      }
-          
-      setInterval(function() {
-        reloadAllIframes();
-      }, 30000);
-    </script>
     <title>Kata Console</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css  ">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.m  in.css">
@@ -38,7 +26,7 @@
       </div>
       <div class="container-fluid">
         <div class="row-fluid">
-          <h5><a href="/{{.Host}}/dashboard/memory">Memory Dashboard</a></h5>
+          <h5><a href="/host/{{.Host}}/dashboard/memory">Memory Dashboard</a></h5>
         </div>  
       </div>
     </div>  
