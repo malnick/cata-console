@@ -1,0 +1,845 @@
+{{with .Hostname}}
+{
+  "id": null,
+  "title": "{{.}}",
+  "originalTitle": "{{.}}",
+  "tags": [],
+  "style": "dark",
+  "timezone": "browser",
+  "editable": true,
+  "hideControls": false,
+  "sharedCrosshair": false,
+  "rows": [
+    {
+      "height": "250px",
+      "panels": [
+        {
+          "title": "{{.}} Available Memory",
+          "error": false,
+          "span": 6,
+          "editable": true,
+          "type": "graph",
+          "id": 1,
+          "datasource": null,
+          "renderer": "flot",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ],
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "rightMax": null,
+            "leftMin": null,
+            "rightMin": null,
+            "rightLogBase": 1,
+            "threshold1": null,
+            "threshold2": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2Color": "rgba(234, 112, 112, 0.22)",
+            "thresholdLine": false
+          },
+          "lines": true,
+          "fill": 1,
+          "linewidth": 2,
+          "points": false,
+          "pointradius": 5,
+          "bars": false,
+          "stack": false,
+          "percentage": false,
+          "legend": {
+            "show": true,
+            "values": true,
+            "min": true,
+            "max": true,
+            "current": true,
+            "total": false,
+            "avg": true,
+            "alignAsTable": false,
+            "rightSide": false
+          },
+          "nullPointMode": "connected",
+          "steppedLine": false,
+          "tooltip": {
+            "value_type": "cumulative",
+            "shared": true
+          },
+          "timeFrom": null,
+          "timeShift": null,
+          "targets": [
+            {
+              "refId": "A",
+              "tags": [
+                {
+                  "key": "hostname",
+                  "operator": "=",
+                  "value": "{{.}}"
+                }
+              ],
+              "groupBy": [
+                {
+                  "type": "time",
+                  "interval": "auto"
+                }
+              ],
+              "fields": [
+                {
+                  "name": "available",
+                  "func": "mean"
+                }
+              ],
+              "measurement": "memory",
+              "query": "SELECT mean(\"available\") AS \"available\" FROM \"memory\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)",
+              "fill": ""
+            }
+          ],
+          "aliasColors": {},
+          "seriesOverrides": [],
+          "links": [],
+          "decimals": null,
+          "transparent": true
+        },
+        {
+          "title": "Bohr-2.local Available Memory",
+          "error": false,
+          "span": 6,
+          "editable": true,
+          "type": "singlestat",
+          "id": 2,
+          "links": [],
+          "datasource": null,
+          "maxDataPoints": 100,
+          "interval": null,
+          "targets": [
+            {
+              "refId": "A",
+              "tags": [
+                {
+                  "key": "hostname",
+                  "operator": "=",
+                  "value": "{{.}}"
+                }
+              ],
+              "groupBy": [
+                {
+                  "type": "time",
+                  "interval": "auto"
+                }
+              ],
+              "fields": [
+                {
+                  "name": "available",
+                  "func": "mean"
+                }
+              ],
+              "measurement": "memory",
+              "query": "SELECT mean(\"available\") AS \"available\" FROM \"memory\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
+            }
+          ],
+          "cacheTimeout": null,
+          "format": "bytes",
+          "prefix": "",
+          "postfix": "",
+          "nullText": null,
+          "valueMaps": [
+            {
+              "value": "null",
+              "op": "=",
+              "text": "N/A"
+            }
+          ],
+          "nullPointMode": "connected",
+          "valueName": "avg",
+          "prefixFontSize": "50%",
+          "valueFontSize": "80%",
+          "postfixFontSize": "50%",
+          "thresholds": "",
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "sparkline": {
+            "show": true,
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "fillColor": "rgba(31, 118, 189, 0.18)"
+          },
+          "transparent": true
+        }
+      ],
+      "title": "Row",
+      "collapse": false,
+      "editable": true
+    },
+    {
+      "title": "New row",
+      "height": "250px",
+      "editable": true,
+      "collapse": false,
+      "panels": [
+        {
+          "title": "{{.}} Memory Used",
+          "error": false,
+          "span": 6,
+          "editable": true,
+          "type": "graph",
+          "id": 5,
+          "datasource": null,
+          "renderer": "flot",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ],
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "rightMax": null,
+            "leftMin": null,
+            "rightMin": null,
+            "rightLogBase": 1,
+            "threshold1": null,
+            "threshold2": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "lines": true,
+          "fill": 1,
+          "linewidth": 2,
+          "points": false,
+          "pointradius": 5,
+          "bars": false,
+          "stack": false,
+          "percentage": false,
+          "legend": {
+            "show": true,
+            "values": true,
+            "min": true,
+            "max": true,
+            "current": true,
+            "total": false,
+            "avg": true
+          },
+          "nullPointMode": "connected",
+          "steppedLine": false,
+          "tooltip": {
+            "value_type": "cumulative",
+            "shared": true
+          },
+          "timeFrom": null,
+          "timeShift": null,
+          "targets": [
+            {
+              "refId": "A",
+              "tags": [
+                {
+                  "key": "hostname",
+                  "operator": "=",
+                  "value": "{{.}}"
+                }
+              ],
+              "groupBy": [
+                {
+                  "type": "time",
+                  "interval": "auto"
+                }
+              ],
+              "fields": [
+                {
+                  "name": "used",
+                  "func": "mean"
+                }
+              ],
+              "measurement": "memory",
+              "query": "SELECT mean(\"used\") AS \"used\" FROM \"memory\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
+            }
+          ],
+          "aliasColors": {},
+          "seriesOverrides": [],
+          "links": [],
+          "transparent": true
+        },
+        {
+          "title": "{{.}} Memory Used",
+          "error": false,
+          "span": 6,
+          "editable": true,
+          "type": "singlestat",
+          "id": 6,
+          "links": [],
+          "datasource": null,
+          "maxDataPoints": 100,
+          "interval": null,
+          "targets": [
+            {
+              "refId": "A",
+              "tags": [],
+              "groupBy": [
+                {
+                  "type": "time",
+                  "interval": "auto"
+                }
+              ],
+              "fields": [
+                {
+                  "name": "used",
+                  "func": "mean"
+                }
+              ],
+              "measurement": "memory",
+              "query": "SELECT mean(\"used\") AS \"used\" FROM \"memory\" WHERE $timeFilter GROUP BY time($interval)"
+            }
+          ],
+          "cacheTimeout": null,
+          "format": "bytes",
+          "prefix": "",
+          "postfix": "",
+          "nullText": null,
+          "valueMaps": [
+            {
+              "value": "null",
+              "op": "=",
+              "text": "N/A"
+            }
+          ],
+          "nullPointMode": "connected",
+          "valueName": "avg",
+          "prefixFontSize": "50%",
+          "valueFontSize": "80%",
+          "postfixFontSize": "50%",
+          "thresholds": "",
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "sparkline": {
+            "show": true,
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "fillColor": "rgba(31, 118, 189, 0.18)"
+          },
+          "transparent": true
+        }
+      ]
+    },
+    {
+      "title": "New row",
+      "height": "250px",
+      "editable": true,
+      "collapse": false,
+      "panels": [
+        {
+          "title": "{{.}} Memory Used %",
+          "error": false,
+          "span": 6,
+          "editable": true,
+          "type": "graph",
+          "id": 3,
+          "datasource": null,
+          "renderer": "flot",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ],
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "rightMax": null,
+            "leftMin": null,
+            "rightMin": null,
+            "rightLogBase": 1,
+            "threshold1": null,
+            "threshold2": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "lines": true,
+          "fill": 1,
+          "linewidth": 2,
+          "points": false,
+          "pointradius": 5,
+          "bars": false,
+          "stack": false,
+          "percentage": false,
+          "legend": {
+            "show": true,
+            "values": true,
+            "min": true,
+            "max": true,
+            "current": true,
+            "total": false,
+            "avg": true
+          },
+          "nullPointMode": "connected",
+          "steppedLine": false,
+          "tooltip": {
+            "value_type": "cumulative",
+            "shared": true
+          },
+          "timeFrom": null,
+          "timeShift": null,
+          "targets": [
+            {
+              "refId": "A",
+              "tags": [
+                {
+                  "key": "hostname",
+                  "operator": "=",
+                  "value": "{{.}}"
+                }
+              ],
+              "groupBy": [
+                {
+                  "type": "time",
+                  "interval": "auto"
+                }
+              ],
+              "fields": [
+                {
+                  "name": "used_percent",
+                  "func": "mean"
+                }
+              ],
+              "measurement": "memory",
+              "query": "SELECT mean(\"used_percent\") AS \"used_percent\" FROM \"memory\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
+            }
+          ],
+          "aliasColors": {},
+          "seriesOverrides": [],
+          "links": [],
+          "transparent": true
+        },
+        {
+          "title": "{{.}} Memory Used %",
+          "error": false,
+          "span": 6,
+          "editable": true,
+          "type": "singlestat",
+          "id": 4,
+          "links": [],
+          "datasource": null,
+          "maxDataPoints": 100,
+          "interval": null,
+          "targets": [
+            {
+              "refId": "A",
+              "tags": [],
+              "groupBy": [
+                {
+                  "type": "time",
+                  "interval": "auto"
+                }
+              ],
+              "fields": [
+                {
+                  "name": "used_percent",
+                  "func": "mean"
+                }
+              ],
+              "measurement": "memory",
+              "query": "SELECT mean(\"used_percent\") AS \"used_percent\" FROM \"memory\" WHERE $timeFilter GROUP BY time($interval)"
+            }
+          ],
+          "cacheTimeout": null,
+          "format": "percent",
+          "prefix": "",
+          "postfix": "",
+          "nullText": null,
+          "valueMaps": [
+            {
+              "value": "null",
+              "op": "=",
+              "text": "N/A"
+            }
+          ],
+          "nullPointMode": "connected",
+          "valueName": "avg",
+          "prefixFontSize": "50%",
+          "valueFontSize": "80%",
+          "postfixFontSize": "50%",
+          "thresholds": "",
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "sparkline": {
+            "show": true,
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "fillColor": "rgba(31, 118, 189, 0.18)"
+          },
+          "transparent": true
+        }
+      ]
+    },
+    {
+      "title": "New row",
+      "height": "250px",
+      "editable": true,
+      "collapse": false,
+      "panels": [
+        {
+          "title": "{{.}} Wired Memory",
+          "error": false,
+          "span": 6,
+          "editable": true,
+          "type": "graph",
+          "id": 7,
+          "datasource": null,
+          "renderer": "flot",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ],
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "rightMax": null,
+            "leftMin": null,
+            "rightMin": null,
+            "rightLogBase": 1,
+            "threshold1": null,
+            "threshold2": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "lines": true,
+          "fill": 1,
+          "linewidth": 2,
+          "points": false,
+          "pointradius": 5,
+          "bars": false,
+          "stack": false,
+          "percentage": false,
+          "legend": {
+            "show": true,
+            "values": true,
+            "min": true,
+            "max": true,
+            "current": true,
+            "total": false,
+            "avg": true
+          },
+          "nullPointMode": "connected",
+          "steppedLine": false,
+          "tooltip": {
+            "value_type": "cumulative",
+            "shared": true
+          },
+          "timeFrom": null,
+          "timeShift": null,
+          "targets": [
+            {
+              "refId": "A",
+              "tags": [
+                {
+                  "key": "hostname",
+                  "operator": "=",
+                  "value": "{{.}}"
+                }
+              ],
+              "groupBy": [
+                {
+                  "type": "time",
+                  "interval": "auto"
+                }
+              ],
+              "fields": [
+                {
+                  "name": "wired",
+                  "func": "mean"
+                }
+              ],
+              "measurement": "memory",
+              "query": "SELECT mean(\"wired\") AS \"wired\" FROM \"memory\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
+            }
+          ],
+          "aliasColors": {},
+          "seriesOverrides": [],
+          "links": [],
+          "transparent": true
+        },
+        {
+          "title": "{{.}} Wired Memory",
+          "error": false,
+          "span": 6,
+          "editable": true,
+          "type": "singlestat",
+          "id": 8,
+          "links": [],
+          "datasource": null,
+          "maxDataPoints": 100,
+          "interval": null,
+          "targets": [
+            {
+              "refId": "A",
+              "tags": [
+                {
+                  "key": "hostname",
+                  "operator": "=",
+                  "value": "{{.}}"
+                }
+              ],
+              "groupBy": [
+                {
+                  "type": "time",
+                  "interval": "auto"
+                }
+              ],
+              "fields": [
+                {
+                  "name": "wired",
+                  "func": "mean"
+                }
+              ],
+              "measurement": "memory",
+              "query": "SELECT mean(\"wired\") AS \"wired\" FROM \"memory\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
+            }
+          ],
+          "cacheTimeout": null,
+          "format": "bytes",
+          "prefix": "",
+          "postfix": "",
+          "nullText": null,
+          "valueMaps": [
+            {
+              "value": "null",
+              "op": "=",
+              "text": "N/A"
+            }
+          ],
+          "nullPointMode": "connected",
+          "valueName": "avg",
+          "prefixFontSize": "50%",
+          "valueFontSize": "80%",
+          "postfixFontSize": "50%",
+          "thresholds": "",
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "sparkline": {
+            "show": true,
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "fillColor": "rgba(31, 118, 189, 0.18)"
+          },
+          "transparent": true
+        }
+      ]
+    },
+    {
+      "title": "New row",
+      "height": "250px",
+      "editable": true,
+      "collapse": false,
+      "panels": [
+        {
+          "title": "{{.}} Active Memory",
+          "error": false,
+          "span": 6,
+          "editable": true,
+          "type": "graph",
+          "id": 9,
+          "datasource": null,
+          "renderer": "flot",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ],
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "rightMax": null,
+            "leftMin": null,
+            "rightMin": null,
+            "rightLogBase": 1,
+            "threshold1": null,
+            "threshold2": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "lines": true,
+          "fill": 1,
+          "linewidth": 2,
+          "points": false,
+          "pointradius": 5,
+          "bars": false,
+          "stack": false,
+          "percentage": false,
+          "legend": {
+            "show": true,
+            "values": true,
+            "min": true,
+            "max": true,
+            "current": true,
+            "total": false,
+            "avg": true
+          },
+          "nullPointMode": "connected",
+          "steppedLine": false,
+          "tooltip": {
+            "value_type": "cumulative",
+            "shared": true
+          },
+          "timeFrom": null,
+          "timeShift": null,
+          "targets": [
+            {
+              "refId": "A",
+              "tags": [],
+              "groupBy": [
+                {
+                  "type": "time",
+                  "interval": "auto"
+                }
+              ],
+              "fields": [
+                {
+                  "name": "active",
+                  "func": "mean"
+                }
+              ],
+              "measurement": "memory",
+              "query": "SELECT mean(\"active\") AS \"active\" FROM \"memory\" WHERE $timeFilter GROUP BY time($interval)"
+            }
+          ],
+          "aliasColors": {},
+          "seriesOverrides": [],
+          "links": [],
+          "transparent": true
+        },
+        {
+          "title": "{{.}} Active Memory",
+          "error": false,
+          "span": 6,
+          "editable": true,
+          "type": "singlestat",
+          "id": 10,
+          "links": [],
+          "datasource": null,
+          "maxDataPoints": 100,
+          "interval": null,
+          "targets": [
+            {
+              "refId": "A",
+              "tags": [
+                {
+                  "key": "hostname",
+                  "operator": "=",
+                  "value": "{{.}}"
+                }
+              ],
+              "groupBy": [
+                {
+                  "type": "time",
+                  "interval": "auto"
+                }
+              ],
+              "fields": [
+                {
+                  "name": "active",
+                  "func": "mean"
+                }
+              ],
+              "measurement": "memory",
+              "query": "SELECT mean(\"active\") AS \"active\" FROM \"memory\" WHERE \"hostname\" = '{{.}}' AND $timeFilter GROUP BY time($interval)"
+            }
+          ],
+          "cacheTimeout": null,
+          "format": "bytes",
+          "prefix": "",
+          "postfix": "",
+          "nullText": null,
+          "valueMaps": [
+            {
+              "value": "null",
+              "op": "=",
+              "text": "N/A"
+            }
+          ],
+          "nullPointMode": "connected",
+          "valueName": "avg",
+          "prefixFontSize": "50%",
+          "valueFontSize": "80%",
+          "postfixFontSize": "50%",
+          "thresholds": "",
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "sparkline": {
+            "show": true,
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "fillColor": "rgba(31, 118, 189, 0.18)"
+          },
+          "transparent": true
+        }
+      ]
+    }
+  ],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ],
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "templating": {
+    "list": []
+  },
+  "annotations": {
+    "list": []
+  },
+  "schemaVersion": 7,
+  "version": 0,
+  "links": []
+}
+{{end}}
