@@ -17,15 +17,15 @@ type HostDashboard struct {
 }
 
 // Accepts the Hostname and creates a new dashboard for the host in ./hostdata/templates/$hostname
-func createHostDashboards(hostname string) {
-	log.Debug("Creating new dashboard for ", hostname)
+func createHostDashboards(hostname string, measurement string) {
+	log.Debug("Creating new dashboard for ", hostname, " with measurement properties for ", measurement)
 	c := ParseConfig()
 	// get our homdir
 	katahome := c.KataHome
 	// Make our directories
 	makeDirectories(hostname, katahome)
 	// Get our host data file path
-	hostJsonFile := fmt.Sprintf("%s/dashboard_templates/%s_dashboard.json", katahome, hostname)
+	hostJsonFile := fmt.Sprintf("%s/dashboard_templates/%s_%s_dashboard.json", katahome, hostname, measurement)
 	// If the host data file exists, don't do anything - else, create it and post to grafana
 	//if _, err := os.Stat(hostJsonFile); os.IsNotExist(err) {
 	log.Warn(hostJsonFile, " not found. Creating and executing new dashboard from template.")
@@ -34,7 +34,7 @@ func createHostDashboards(hostname string) {
 	// Update the hostname
 	hostdash.Hostname = hostname
 	// Parse a new json template and save it
-	t, err := template.ParseFiles("grafana_config/host_dashboard.json.template")
+	t, err := template.ParseFiles(fmt.Sprintf("grafana_config/host_%s_dashboard.json.template", measurement))
 	if err != nil {
 		log.Error("Issue parsing dashboard template for ", hostname)
 		log.Error(err)
