@@ -104,7 +104,7 @@ func ConsoleHostnameLatest(w http.ResponseWriter, r *http.Request) {
 	// Create grafana dashboard for our hostname
 	log.Info("Request for latest host data for ", hostname)
 	// Creates new json template for hostname and POSTs it to Grafana if it doesn't exist
-	createHostDashboard(hostname)
+	createHostDashboards(hostname)
 
 	// Make the iframe URIs for the latest graphs.
 	p.GrafanaUris = createGrafanaIframes(hostname)

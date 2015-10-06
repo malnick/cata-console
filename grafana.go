@@ -17,7 +17,7 @@ type HostDashboard struct {
 }
 
 // Accepts the Hostname and creates a new dashboard for the host in ./hostdata/templates/$hostname
-func createHostDashboard(hostname string) {
+func createHostDashboards(hostname string) {
 	log.Debug("Creating new dashboard for ", hostname)
 	c := ParseConfig()
 	// get our homdir
@@ -52,8 +52,8 @@ func createHostDashboard(hostname string) {
 		log.Error("Issue executing template ", hostdash)
 		log.Error(err)
 	}
+	// POST the new host dashboard to grafana
 	updateHostDashboard(hostJsonFile)
-	//}
 }
 
 func updateHostDashboard(hostJsonFile string) {

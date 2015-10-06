@@ -24,7 +24,7 @@
         <div class="page-header">
           <nav class="navbar">
             <div class="navbar-inner">
-              <a class="brand" href="/"><h1> {{with .Host}}{{.}}{{end}}<small> Latest Data : From 15 Minutes Ago</small></h1></a>
+              <a class="brand" href="/"><h1> {{with .Host}}{{.}}{{end}}<small> Dashboard</small></h1></a>
               <ul class="nav">
                 <li><a href="/config">Configuration</a></li>
                 <li><a href="/">Main</a></li>
@@ -34,21 +34,11 @@
         </div>
       </div>
       <div class="panel panel-primary">
-        <div class="panel-heading"><h4 class="text-capitalize">{{.Host}} Load</h4><small> Last 15 Minutes </small></div>
+        <div class="panel-heading"><h4 class="text-capitalize">{{.Host}} :: Available Dashboards</h4></div>
       </div>
-
       <div class="container-fluid">
         <div class="row-fluid">
-          <div class="span1">
-          </div>
-          <div class="span10">
-          {{with .GrafanaUris}}
-          {{range $iframes := .}}
-          {{.}}
-          
-          {{end}}
-          {{end}}
-          </div>
+          <h5><a href="/{{.Host}}/dashboard/memory">Memory Dashboard</a></h5>
         </div>  
       </div>
     </div>  
