@@ -38,10 +38,10 @@ var routes = Routes{
 		ConsoleHostnameDashboardRoot,
 	},
 	Route{
-		"HostnameDashboardMemory",
+		"HostnameDashboardMeasurement",
 		"GET",
-		"/host/{hostname}/dashboard/memory",
-		ConsoleHostnameDashboardMemory,
+		"/host/{hostname}/dashboard/{measurement}",
+		ConsoleHostnameDashboardMeasurement,
 	},
 	Route{
 		"HostnameRoot",
