@@ -18,15 +18,21 @@ type AllHostDataPage struct {
 	Host    string
 }
 
-type LatestHostDataPage struct {
-	Data        map[string]map[string]interface{}
-	Host        string
-	GrafanaUris []string
-}
+//type LatestHostDataPage struct {
+//	Data        map[string]map[string]interface{}
+//	Host        string
+//	GrafanaUris []string
+//}
 
 type RootDashboard struct {
 	Host         string
 	Measurements []string
+}
+
+type MeasurementDashboard struct {
+	Host        string
+	Measurement string
+	GrafanaUris []string
 }
 
 type MainPage struct {
@@ -128,17 +134,18 @@ func ConsoleHostnameDashboardMeasurement(w http.ResponseWriter, r *http.Request)
 	hostname := vars["hostname"]
 	measurement := vars["measurement"]
 
-	var p LatestHostDataPage
+	var p MeasurementDashboard
 	// Create grafana dashboard for our hostname
 	log.Info("Request memory dashboard for ", hostname)
 	// Creates new json template for hostname and POSTs it to Grafana if it doesn't exist
 	createHostDashboards(hostname, measurement)
 
 	// Make the iframe URIs for the latest graphs.
-	p.GrafanaUris = createGrafanaIframes(hostname)
+	p.GrafanaUris = createGrafanaIframes(hostname, measurement)
 
 	// Execute text template so we can drop in clear strings with no formating
 	p.Host = hostname
+	p.Measurement = measurement
 	t, _ := textTemplate.ParseFiles("views/HostDashboardMeasurement.html")
 	t.Execute(w, p)
 }
