@@ -24,6 +24,11 @@ type LatestHostDataPage struct {
 	GrafanaUris []string
 }
 
+type RootDashboard struct {
+	Host   string
+	Series []string
+}
+
 type MainPage struct {
 	AvailableHosts map[string]string
 }
@@ -101,15 +106,15 @@ func Console(w http.ResponseWriter, r *http.Request) {
 func ConsoleHostnameDashboardRoot(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	hostname := vars["hostname"]
-	var p LatestHostDataPage
+	var p RootDashboard
 	// Create grafana dashboard for our hostname
 	log.Info("Request dashboard for ", hostname)
-	// Creates new json template for hostname and POSTs it to Grafana if it doesn't exist
-	createHostDashboards(hostname)
-
-	// Make the iframe URIs for the latest graphs.
-	p.GrafanaUris = createGrafanaIframes(hostname)
-
+	// Get known series for the root page
+	uniqueSeries, err := getUniqueSeries(hostname)
+	if err != nil {
+		log.Error(err)
+	}
+	p.Series = uniqueSeries
 	// Execute text template so we can drop in clear strings with no formating
 	p.Host = hostname
 	t, _ := textTemplate.ParseFiles("views/HostDashboardRoot.html")

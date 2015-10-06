@@ -48,6 +48,25 @@ func getUniqueHosts() ([]string, error) {
 	return uniqueHosts, nil
 }
 
+// Get unique series
+func getUniqueSeries(host string) ([]string, error) {
+	var uniqueSeries = []string{}
+	log.Debug("Getting distinct series...")
+	// Get a fresh client
+	influxClient := SetInflux()
+	// Query influx for distinct hosts
+	cmd := "select distinct(hostname) from host"
+	distinctSeries, err := queryInfluxDb(influxClient, cmd, InfluxDb)
+	if err != nil {
+		return nil, err
+	}
+	// Get the output in []string format
+	uniqueSeries = stringArrayResults(distinctSeries)
+	// return the results
+	return uniqueSeries, nil
+}
+
+// The latest host data
 func getLatestHostData(host string) ([]client.Result, error) {
 	log.Debug("Getting latest data for host ", host)
 	// Get a new client
