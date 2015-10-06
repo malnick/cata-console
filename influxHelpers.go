@@ -9,10 +9,12 @@ import (
 	"github.com/influxdb/influxdb/client"
 )
 
-// Accepts a an array of results and returns a singlular line query
+// Takes a result from influx and returns a string array
 func stringArrayResults(resultsArry []client.Result) []string {
 	var stringArry = []string{}
 	for _, v := range resultsArry {
+		log.Warn(v)
+		log.Warn(v.Series[0].Values)
 		switch v.Series[0].Values[0][1].(type) {
 		case []interface{}:
 			for _, value := range v.Series[0].Values[0][1].([]interface{}) {
@@ -49,21 +51,33 @@ func getUniqueHosts() ([]string, error) {
 }
 
 // Get unique series
-func getUniqueSeries(host string) ([]string, error) {
-	var uniqueSeries = []string{}
-	log.Debug("Getting distinct series...")
+func getUniqueMeasurements(host string) ([]string, error) {
+	var uniqueMeasurements = []string{}
+	log.Debug("Getting host measurements...")
 	// Get a fresh client
 	influxClient := SetInflux()
 	// Query influx for distinct hosts
-	cmd := "select distinct(hostname) from host"
-	distinctSeries, err := queryInfluxDb(influxClient, cmd, InfluxDb)
+	cmd := fmt.Sprintf("show measurements where hostname = '%s'", host)
+	distinct, err := queryInfluxDb(influxClient, cmd, InfluxDb)
 	if err != nil {
 		return nil, err
 	}
+	log.Debug("Distinct measurements for ", host, ":", distinct)
+	// Get measurement keys out of result and return string array
+	var stringArry = []string{}
+	for _, v := range distinct {
+		for _, name := range v.Series[0].Values {
+			switch name[0].(type) {
+			case string:
+				stringArry = append(stringArry, name[0].(string))
+			}
+		}
+	}
 	// Get the output in []string format
-	uniqueSeries = stringArrayResults(distinctSeries)
+	uniqueMeasurements = stringArry
+	log.Warn(uniqueMeasurements)
 	// return the results
-	return uniqueSeries, nil
+	return uniqueMeasurements, nil
 }
 
 // The latest host data

@@ -25,8 +25,8 @@ type LatestHostDataPage struct {
 }
 
 type RootDashboard struct {
-	Host   string
-	Series []string
+	Host         string
+	Measurements []string
 }
 
 type MainPage struct {
@@ -110,13 +110,14 @@ func ConsoleHostnameDashboardRoot(w http.ResponseWriter, r *http.Request) {
 	// Create grafana dashboard for our hostname
 	log.Info("Request dashboard for ", hostname)
 	// Get known series for the root page
-	uniqueSeries, err := getUniqueSeries(hostname)
+	uniqueMeasurements, err := getUniqueMeasurements(hostname)
 	if err != nil {
 		log.Error(err)
 	}
-	p.Series = uniqueSeries
+	p.Measurements = uniqueMeasurements
 	// Execute text template so we can drop in clear strings with no formating
 	p.Host = hostname
+	log.Warn(p)
 	t, _ := textTemplate.ParseFiles("views/HostDashboardRoot.html")
 	t.Execute(w, p)
 }

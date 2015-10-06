@@ -26,7 +26,12 @@
       </div>
       <div class="container-fluid">
         <div class="row-fluid">
-          <h5><a href="/host/{{.Host}}/dashboard/memory">Memory Dashboard</a></h5>
+          {{$hostname := .Host}}
+          {{with .Measurements}}
+          {{range $i, $name := .}}
+          <h5 class="text-capitalize"><a href="/host/{{$hostname}}/dashboard/{{$name}}">{{$name}} Dashboard</a></h5>
+          {{end}}
+          {{end}}
         </div>  
       </div>
     </div>  
